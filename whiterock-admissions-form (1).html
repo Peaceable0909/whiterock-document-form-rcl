@@ -227,7 +227,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
           <p>Document Submission Portal — RCL</p>
         </div>
       </div>
-      <div class="hdr-actions">
+      <div class="hdr-actions" style="display:none">
         <button class="hbtn" onclick="openSetup()">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>
           Setup
@@ -253,7 +253,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
     <span><strong>Setup required:</strong> Click here to connect your Google Apps Script URL so documents save to Drive and email works.</span>
   </div>
 
-  <div class="banner banner-ok" id="okBanner">
+  <div class="banner banner-ok" id="okBanner" style="display:none!important">
     <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd"/></svg>
     <span><strong>Connected!</strong> Documents will be saved to Google Drive and emailed to applications.whiterock@gmail.com</span>
   </div>
@@ -288,22 +288,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
               <input type="tel" id="fPhone" placeholder="+234 800 000 0000" required autocomplete="tel">
             </div>
             <div class="fld full">
+              <label>School / University <sup>*</sup></label>
+              <select id="fSchool" required onchange="onSchoolChange()">
+                <option value="" disabled selected>Select a school...</option>
+                <option value="rcl">Regent College London (RCL)</option>
+                <option value="cccu">Canterbury Christ Church University (CCCU)</option>
+                <option value="ysj">York St John University</option>
+                <option value="bpp">BPP University</option>
+              </select>
+            </div>
+            <div class="fld full" id="programWrap" style="display:none">
               <label>Programme Intending to Apply For <sup>*</sup></label>
-              <select id="fProgram" required>
+              <select id="fProgram">
                 <option value="" disabled selected>Select your programme...</option>
-                <optgroup label="Business — Academic Year 2025/2026">
-                  <option>BSc (Hons) Business Management</option>
-                  <option>BSc (Hons) Business Management Top-up</option>
-                  <option>Master of Business Administration (MBA)</option>
-                  <option>MSc International Management</option>
-                </optgroup>
-                <optgroup label="Health, Sport &amp; Social Science — Academic Year 2025/2026">
-                  <option>MSc Social Care, Health and Wellbeing</option>
-                  <option>MSc Psychology</option>
-                </optgroup>
-                <optgroup label="Engineering &amp; Computing — Academic Year 2025/2026">
-                  <option>MSc Software Engineering</option>
-                </optgroup>
               </select>
             </div>
           </div>
@@ -610,18 +607,20 @@ dz.addEventListener('drop', e=>{
 });
 
 // ── PROGRESS BAR ─────────────────────────────────────────
-['fName','fEmail','fPhone','fProgram'].forEach(id=>{
+['fName','fEmail','fPhone'].forEach(id=>{
   document.getElementById(id).addEventListener('input', updateProgress);
 });
 function updateProgress(){
-  const filled=['fName','fEmail','fPhone','fProgram'].filter(id=>document.getElementById(id).value.trim()).length;
+  const filled=['fName','fEmail','fPhone','fSchool','fProgram'].filter(id=>{
+    const el=document.getElementById(id); return el&&el.value.trim();
+  }).length;
   const hasFiles=files.length>0;
-  const pct=(filled/4)*60+(hasFiles?40:0);
+  const pct=(filled/5)*60+(hasFiles?40:0);
   const lit=Math.round((pct/100)*5);
   for(let i=1;i<=5;i++) document.getElementById('ps'+i).classList.toggle('lit',i<=lit);
-  document.getElementById('trA').className='tstep '+(filled===4?'ok':filled>0?'on':'');
-  document.getElementById('trB').className='tstep '+(hasFiles?'ok':filled===4?'on':'');
-  document.getElementById('trC').className='tstep '+(filled===4&&hasFiles?'on':'');
+  document.getElementById('trA').className='tstep '+(filled===5?'ok':filled>0?'on':'');
+  document.getElementById('trB').className='tstep '+(hasFiles?'ok':filled===5?'on':'');
+  document.getElementById('trC').className='tstep '+(filled===5&&hasFiles?'on':'');
 }
 
 // ── PDF CONVERSION ────────────────────────────────────────
@@ -721,10 +720,13 @@ async function handleSubmit(e){
   if(files.length===0){showToast('Please upload at least one document.','err');return;}
   cfg.scriptUrl = SCRIPT_URL;
 
+  const schoolEl=document.getElementById('fSchool');
+  const schoolName=schoolEl.options[schoolEl.selectedIndex]?.text||'';
   const params={
     name:   document.getElementById('fName').value.trim(),
     email:  document.getElementById('fEmail').value.trim(),
     phone:  document.getElementById('fPhone').value.trim(),
+    school: schoolName,
     program:document.getElementById('fProgram').value,
   };
 
@@ -801,6 +803,7 @@ function showSuccess(params, count, folderUrl){
   document.getElementById('smeta').innerHTML=`
     <div><span class="sl">Name</span><span class="sv">${params.name}</span></div>
     <div><span class="sl">Email</span><span class="sv">${params.email}</span></div>
+    <div><span class="sl">School</span><span class="sv">${params.school}</span></div>
     <div><span class="sl">Programme</span><span class="sv">${params.program}</span></div>
     <div><span class="sl">Documents</span><span class="sv">${count} file(s) submitted</span></div>
     <div><span class="sl">Sent to</span><span class="sv">applications.whiterock@gmail.com</span></div>`;
@@ -813,6 +816,7 @@ function showSuccess(params, count, folderUrl){
 
 function resetForm(){
   document.getElementById('theForm').reset();
+  document.getElementById('programWrap').style.display='none';
   files=[]; renderFileList(); updateProgress();
   document.getElementById('successView').classList.remove('show');
   document.getElementById('driveFolderLink').style.display='none';
@@ -829,6 +833,136 @@ function showToast(msg,type=''){
   const t=document.getElementById('toast');
   t.textContent=msg; t.className='toast show'+(type?' '+type:'');
   setTimeout(()=>{t.className='toast';},3500);
+}
+
+
+// ── SCHOOL → PROGRAMME DATA ───────────────────────────────
+const PROGRAMMES = {
+  rcl: [
+    { group: 'Business — AY 2025/2026', items: [
+      'BSc (Hons) Business Management',
+      'BSc (Hons) Business Management Top-up',
+      'Master of Business Administration (MBA)',
+      'MSc International Management',
+    ]},
+    { group: 'Health, Sport & Social Science — AY 2025/2026', items: [
+      'MSc Social Care, Health and Wellbeing',
+      'MSc Psychology',
+    ]},
+    { group: 'Engineering & Computing — AY 2025/2026', items: [
+      'MSc Software Engineering',
+    ]},
+  ],
+  cccu: [
+    { group: 'Canterbury Christ Church University', items: [
+      'MBA International',
+      'MSc International Business',
+      'MA Early Childhood Education',
+      'MSc Applied Exercise and Health Science',
+      'MSc Psychology',
+      'LL.M. International Business and Law',
+      'MA Modern History',
+      'MEng Chemical Engineering',
+      'MA Teaching English to Speakers of Other Languages (TESOL)',
+      'MMus Master of Music',
+      'MA Education',
+      'MSc Forensic and Investigative Psychology',
+      'MSc Event and Tourism Management',
+      'MSc Data Intelligence',
+      'MA Games Design',
+      'MSc Advanced Manufacturing Systems and Technology',
+      'MA Applied Linguistics',
+      'MA Media, Communications and PR',
+      'MSc Strength, Conditioning and Performance Science',
+      'MA Film and Media Production',
+      'MSc Speech and Language Therapy',
+      'MSc Criminology and Criminal Psychology',
+      'MSc Applied Clinical Psychology',
+      'MSc Cybersecurity Technology',
+      'MSc International Hospitality Management',
+      'MSc Policing & Security Transformation',
+      'PGCE Secondary (QTS)',
+      'MA Heritage',
+      'MSc Nursing Adult',
+      'MSc Nursing Child',
+      'MSc Mental Health Nursing',
+      'MSc International Tourism & Hospitality Management',
+      'MSc International Events Management',
+      'MSc Global Public Health',
+    ]},
+  ],
+  ysj: [
+    { group: 'York St John — York Campus', items: [
+      'Masters Business Administration (York)',
+      'MBA with Professional Experience (York)',
+      'MSc Human Resource Management',
+      'MSc Human Resource Management with a Year in Industry',
+      'MSc International Business',
+      'MSc International Business with a Year in Industry',
+      'MSc Project Management',
+      'MSc Project Management with Professional Experience',
+      'Masters Business Administration Healthcare Management',
+      'Masters Business Administration Healthcare Management with Year in Industry',
+      'MSc Strategic Digital Marketing',
+      'MSc Strategic Digital Marketing with Professional Experience',
+      'MSc Marketing',
+      'MSc Marketing with a Year in Industry',
+    ]},
+    { group: 'York St John — London Campus', items: [
+      'Masters Business Administration (London)',
+      'MBA with Professional Experience (London)',
+      'MSc Computer Science',
+      'MSc Computer Science with Year in Industry',
+      'MSc International Project Management',
+      'MSc International Project Management with Professional Experience',
+      'MSc Digital Marketing',
+      'MSc Digital Marketing with Professional Experience',
+      'MSc Data Science',
+      'MSc Data Science with Professional Experience',
+      'MSc Global Healthcare Management',
+      'MSc Global Healthcare Management with Professional Experience',
+      'MSc Public Health',
+      'MSc Public Health with Professional Experience',
+      'MRes Management Studies',
+      'BA (Hons) Global Business Management (Level 6 Direct Entry)',
+      'BSc (Hons) Computing for Industry (Level 6 entry)',
+      'BA (Hons) Business and Computing (Level 6 entry)',
+      'MSc Hospitality Management and Tourism',
+    ]},
+  ],
+  bpp: [
+    { group: 'BPP University', items: [
+      'Accountancy and Tax',
+      'Law',
+      'Leadership and Management',
+      'Human Resources',
+      'Data and Analytics',
+      'Artificial Intelligence (AI)',
+      'Finance',
+      'Digital Marketing',
+      'Nursing and Healthcare',
+    ]},
+  ],
+};
+
+function onSchoolChange(){
+  const school = document.getElementById('fSchool').value;
+  const wrap = document.getElementById('programWrap');
+  const sel = document.getElementById('fProgram');
+  sel.innerHTML = '<option value="" disabled selected>Select your programme...</option>';
+  if(!school){ wrap.style.display='none'; return; }
+  const groups = PROGRAMMES[school] || [];
+  groups.forEach(g=>{
+    const og = document.createElement('optgroup');
+    og.label = g.group;
+    g.items.forEach(item=>{ const o=document.createElement('option'); o.textContent=item; og.appendChild(o); });
+    sel.appendChild(og);
+  });
+  wrap.style.display='';
+  sel.removeAttribute('disabled');
+  // hook change event for progress
+  sel.onchange = updateProgress;
+  updateProgress();
 }
 
 // ── INIT ──────────────────────────────────────────────────
