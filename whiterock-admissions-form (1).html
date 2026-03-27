@@ -1067,59 +1067,57 @@ async function togglePreview(id){
 async function generatePreview(f, panel){
   const ext = f.ext;
 
-  // ── Image ──────────────────────────────────────────────
   if(['jpg','jpeg','png','gif','bmp','webp'].includes(ext)){
     const url = URL.createObjectURL(f.file);
-    panel.innerHTML=`<img src="${url}" alt="preview" onload="" onerror="this.parentElement.innerHTML='<div class=fi-preview-unsupported>Could not load image.</div>'">`;
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = 'preview';
+    img.style.cssText = 'display:block;width:100%;max-height:320px;object-fit:contain;background:#fff';
+    img.onerror = function(){ panel.innerHTML='<div class="fi-preview-unsupported">Could not load image.</div>'; };
+    panel.innerHTML = '';
+    panel.appendChild(img);
     return;
   }
 
-  // ── PDF (render page 1 via PDF.js) ────────────────────
   if(ext==='pdf'){
     const rawAb = await f.file.arrayBuffer();
     const ab = new Uint8Array(rawAb);
     if(typeof pdfjsLib === 'undefined'){
-      panel.innerHTML='<div class="fi-preview-unsupported">PDF preview unavailable (PDF.js not loaded).</div>';
+      panel.innerHTML='<div class="fi-preview-unsupported">PDF preview unavailable.</div>';
       return;
     }
     pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const pdf  = await pdfjsLib.getDocument({data: ab, verbosity:0}).promise;
+    const pdf = await pdfjsLib.getDocument({data:ab,verbosity:0}).promise;
     const page = await pdf.getPage(1);
-    const viewport = page.getViewport({scale:1.5});
+    const vp = page.getViewport({scale:1.5});
     const canvas = document.createElement('canvas');
-    canvas.width  = viewport.width;
-    canvas.height = viewport.height;
-    canvas.style.width  = '100%';
-    canvas.style.height = 'auto';
-    canvas.style.display = 'block';
-    const ctx = canvas.getContext('2d');
-    await page.render({canvasContext:ctx, viewport}).promise;
-    panel.innerHTML='';
+    canvas.width = vp.width;
+    canvas.height = vp.height;
+    canvas.style.cssText = 'display:block;width:100%;height:auto';
+    await page.render({canvasContext:canvas.getContext('2d'), viewport:vp}).promise;
+    panel.innerHTML = '';
     panel.appendChild(canvas);
     return;
   }
 
-  // ── DOCX ──────────────────────────────────────────────
   if(ext==='docx'){
     const ab = await f.file.arrayBuffer();
     const result = await mammoth.extractRawText({arrayBuffer:ab});
     const snippet = result.value.slice(0,800).trim() || '(empty document)';
-    panel.innerHTML=`<div class="fi-preview-text">${esc(snippet)}${result.value.length>800?'
-…':''}`;
+    const more = result.value.length > 800 ? '\n...' : '';
+    panel.innerHTML = '<div class="fi-preview-text">' + esc(snippet) + more + '</div>';
     return;
   }
 
-  // ── Plain text ────────────────────────────────────────
   if(['txt','rtf','doc'].includes(ext)){
     const text = await f.file.text();
     const snippet = text.slice(0,800).trim() || '(empty file)';
-    panel.innerHTML=`<div class="fi-preview-text">${esc(snippet)}${text.length>800?'
-…':''}`;
+    const more = text.length > 800 ? '\n...' : '';
+    panel.innerHTML = '<div class="fi-preview-text">' + esc(snippet) + more + '</div>';
     return;
   }
 
-  // ── Unsupported ───────────────────────────────────────
-  panel.innerHTML=`<div class="fi-preview-unsupported">Preview not available for .${ext} files.<br>The document will still be converted and submitted correctly.</div>`;
+  panel.innerHTML = '<div class="fi-preview-unsupported">Preview not available for .' + ext + ' files — document will still be submitted correctly.</div>';
 }
 
 // ── INIT ──────────────────────────────────────────────────
