@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -114,6 +115,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .chip-wait{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
 .fi-remove{background:none;border:none;cursor:pointer;color:var(--ink3);padding:4px;border-radius:4px;display:flex;transition:color .2s;flex-shrink:0}
 .fi-remove:hover{color:var(--red)}
+.fi-dtype{margin-top:8px;width:100%}
+.fi-dtype select{width:100%;height:36px;padding:0 10px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink);background:var(--white);outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a7a7a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.fi-dtype select:focus{border-color:var(--navy2)}
+.fi-dtype select.unlabelled{border-color:var(--amber-border);background-color:var(--amber-bg)}
+.fi-dtype select.labelled{border-color:var(--green-border)}
+.fi-preview-btn{background:none;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;color:var(--ink3);padding:4px 9px;display:inline-flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;margin-top:7px;transition:all .2s}
+.fi-preview-btn:hover{border-color:var(--navy2);color:var(--navy2);background:var(--navy-bg)}
+.fi-preview-btn.open{border-color:var(--navy2);color:var(--navy2);background:var(--navy-bg)}
+.fi-preview-btn svg{width:12px;height:12px}
+.fi-preview-panel{display:none;margin-top:10px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);background:var(--paper)}
+.fi-preview-panel.show{display:block}
+.fi-preview-panel canvas{display:block;width:100%;height:auto;max-height:320px;object-fit:contain;background:#fff}
+.fi-preview-panel img{display:block;width:100%;max-height:320px;object-fit:contain;background:#fff}
+.fi-preview-text{padding:12px 14px;font-size:12px;line-height:1.6;color:var(--ink2);font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto;background:#fff}
+.fi-preview-loading{padding:20px;text-align:center;font-size:12px;color:var(--ink3);background:#fff}
+.fi-preview-unsupported{padding:16px;text-align:center;font-size:12px;color:var(--ink3);background:#fff}
 .files-empty{display:none;font-size:13px;color:var(--ink3);text-align:center;padding:10px 0}
 .files-count{font-size:12px;color:var(--ink3);margin-top:10px;text-align:right}
 .files-count span{font-weight:600;color:var(--navy)}
@@ -544,6 +561,26 @@ function removeFile(id){
   updateProgress();
 }
 
+const DOC_TYPES = [
+  'BSc Certificate',
+  'HND Certificate',
+  'WAEC / NECO Certificate',
+  'BSc Transcript',
+  'HND Transcript',
+  'CV',
+  'WAEC / NECO Scratch Card',
+  'Passport Data Page',
+  'Affidavit',
+];
+
+function setDocType(id, val){
+  const f = files.find(x=>x.id===id);
+  if(f){ f.docType = val; }
+  const sel = document.getElementById('dtype-'+id);
+  if(sel){ sel.className = val ? 'labelled' : 'unlabelled'; }
+  updateProgress();
+}
+
 function renderFileList(){
   const list = document.getElementById('fileList');
   const empty = document.getElementById('filesEmpty');
@@ -560,6 +597,8 @@ function renderFileList(){
   countEl.style.display='block';
   countNum.textContent = files.length;
 
+  const typeOpts = DOC_TYPES.map(t=>`<option value="${t}">${t}</option>`).join('');
+
   files.forEach(f=>{
     const isPDF = f.ext==='pdf';
     let icClass='fic-oth', icLabel=f.ext.toUpperCase().slice(0,3)||'?';
@@ -571,19 +610,42 @@ function renderFileList(){
       ? '<span class="fi-chip chip-pass">✓ PDF — sent as-is</span>'
       : '<span class="fi-chip chip-conv">↻ Will convert to PDF</span>';
 
+    const selVal = f.docType || '';
+    const selClass = selVal ? 'labelled' : 'unlabelled';
+
     const div = document.createElement('div');
     div.className='fitem';
     div.id='fitem-'+f.id;
     div.innerHTML=`
-      <div class="fic ${icClass}">${icLabel}</div>
-      <div class="fi-info">
-        <div class="fi-name">${esc(f.file.name)}</div>
-        <div class="fi-meta">${fmtSize(f.file.size)} · ${f.ext.toUpperCase()}</div>
-        ${chip}
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div class="fic ${icClass}">${icLabel}</div>
+        <div class="fi-info" style="flex:1;min-width:0">
+          <div class="fi-name">${esc(f.file.name)}</div>
+          <div class="fi-meta">${fmtSize(f.file.size)} · ${f.ext.toUpperCase()}</div>
+          ${chip}
+          <div class="fi-dtype">
+            <select id="dtype-${f.id}" class="${selClass}" onchange="setDocType(${f.id}, this.value)">
+              <option value="" disabled ${selVal?'':'selected'}>— Select document type —</option>
+              ${typeOpts}
+            </select>
+          </div>
+          <button type="button" class="fi-preview-btn" id="pbtn-${f.id}" onclick="togglePreview(${f.id})">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+            Preview
+          </button>
+        </div>
+        <button type="button" class="fi-remove" onclick="removeFile(${f.id})" title="Remove">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4L4 12M4 4l8 8"/></svg>
+        </button>
       </div>
-      <button type="button" class="fi-remove" onclick="removeFile(${f.id})" title="Remove">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4L4 12M4 4l8 8"/></svg>
-      </button>`;
+      <div class="fi-preview-panel" id="preview-${f.id}"></div>`;
+    // restore selected value after render
+    if(selVal){
+      setTimeout(()=>{
+        const s=document.getElementById('dtype-'+f.id);
+        if(s) s.value=selVal;
+      },0);
+    }
     list.appendChild(div);
   });
 }
@@ -615,12 +677,13 @@ function updateProgress(){
     const el=document.getElementById(id); return el&&el.value.trim();
   }).length;
   const hasFiles=files.length>0;
-  const pct=(filled/5)*60+(hasFiles?40:0);
+  const allLabelled=files.length>0 && files.every(f=>f.docType);
+  const pct=(filled/5)*50+(hasFiles?25:0)+(allLabelled?25:0);
   const lit=Math.round((pct/100)*5);
   for(let i=1;i<=5;i++) document.getElementById('ps'+i).classList.toggle('lit',i<=lit);
   document.getElementById('trA').className='tstep '+(filled===5?'ok':filled>0?'on':'');
-  document.getElementById('trB').className='tstep '+(hasFiles?'ok':filled===5?'on':'');
-  document.getElementById('trC').className='tstep '+(filled===5&&hasFiles?'on':'');
+  document.getElementById('trB').className='tstep '+(allLabelled?'ok':hasFiles?'on':filled===5?'on':'');
+  document.getElementById('trC').className='tstep '+(filled===5&&allLabelled?'on':'');
 }
 
 // ── PDF CONVERSION ────────────────────────────────────────
@@ -718,6 +781,16 @@ async function sendWA(params, fileCount){
 async function handleSubmit(e){
   e.preventDefault();
   if(files.length===0){showToast('Please upload at least one document.','err');return;}
+  const unlabelled=files.filter(f=>!f.docType);
+  if(unlabelled.length>0){
+    showToast(`Please select a document type for all ${files.length} file(s).`,'err');
+    // highlight the missing ones
+    unlabelled.forEach(f=>{
+      const s=document.getElementById('dtype-'+f.id);
+      if(s){s.classList.add('unlabelled');s.closest('.fitem').style.borderColor='var(--amber-border)';}
+    });
+    return;
+  }
   cfg.scriptUrl = SCRIPT_URL;
 
   const schoolEl=document.getElementById('fSchool');
@@ -740,7 +813,10 @@ async function handleSubmit(e){
     setProc(1,'on');
     for(const f of files){
       const b64=await toPDFBase64(f);
-      converted.push({name:f.file.name.replace(/\.[^.]+$/,'')+'.pdf', base64:b64});
+      const studentFirst = params.name.trim().replace(/[^a-zA-Z0-9 ]/g,'').trim();
+      const docLabel = f.docType || f.file.name.replace(/\.[^.]+$/,'');
+      const safeName = `${studentFirst} - ${docLabel}.pdf`;
+      converted.push({name:safeName, base64:b64});
     }
     setProc(1,'ok');
   }catch(err){
@@ -963,6 +1039,86 @@ function onSchoolChange(){
   // hook change event for progress
   sel.onchange = updateProgress;
   updateProgress();
+}
+
+
+// ── PREVIEW ───────────────────────────────────────────────
+async function togglePreview(id){
+  const panel = document.getElementById('preview-'+id);
+  const btn   = document.getElementById('pbtn-'+id);
+  if(panel.classList.contains('show')){
+    panel.classList.remove('show');
+    btn.classList.remove('open');
+    btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg> Preview`;
+    return;
+  }
+  panel.classList.add('show');
+  btn.classList.add('open');
+  btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg> Hide`;
+  if(panel.dataset.loaded) return; // already generated
+  panel.dataset.loaded='1';
+  panel.innerHTML='<div class="fi-preview-loading">Generating preview...</div>';
+  const f = files.find(x=>x.id===id);
+  if(!f){ panel.innerHTML='<div class="fi-preview-unsupported">File not found.</div>'; return; }
+  try{ await generatePreview(f, panel); }
+  catch(err){ panel.innerHTML='<div class="fi-preview-unsupported">Could not generate preview.</div>'; }
+}
+
+async function generatePreview(f, panel){
+  const ext = f.ext;
+
+  // ── Image ──────────────────────────────────────────────
+  if(['jpg','jpeg','png','gif','bmp','webp'].includes(ext)){
+    const url = URL.createObjectURL(f.file);
+    panel.innerHTML=`<img src="${url}" alt="preview" onload="" onerror="this.parentElement.innerHTML='<div class=fi-preview-unsupported>Could not load image.</div>'">`;
+    return;
+  }
+
+  // ── PDF (render page 1 via PDF.js) ────────────────────
+  if(ext==='pdf'){
+    const ab = await f.file.arrayBuffer();
+    if(typeof pdfjsLib === 'undefined'){
+      panel.innerHTML='<div class="fi-preview-unsupported">PDF preview unavailable (PDF.js not loaded).</div>';
+      return;
+    }
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf  = await pdfjsLib.getDocument({data: ab}).promise;
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({scale:1.5});
+    const canvas = document.createElement('canvas');
+    canvas.width  = viewport.width;
+    canvas.height = viewport.height;
+    canvas.style.width  = '100%';
+    canvas.style.height = 'auto';
+    canvas.style.display = 'block';
+    const ctx = canvas.getContext('2d');
+    await page.render({canvasContext:ctx, viewport}).promise;
+    panel.innerHTML='';
+    panel.appendChild(canvas);
+    return;
+  }
+
+  // ── DOCX ──────────────────────────────────────────────
+  if(ext==='docx'){
+    const ab = await f.file.arrayBuffer();
+    const result = await mammoth.extractRawText({arrayBuffer:ab});
+    const snippet = result.value.slice(0,800).trim() || '(empty document)';
+    panel.innerHTML=`<div class="fi-preview-text">${esc(snippet)}${result.value.length>800?'
+…':''}`;
+    return;
+  }
+
+  // ── Plain text ────────────────────────────────────────
+  if(['txt','rtf','doc'].includes(ext)){
+    const text = await f.file.text();
+    const snippet = text.slice(0,800).trim() || '(empty file)';
+    panel.innerHTML=`<div class="fi-preview-text">${esc(snippet)}${text.length>800?'
+…':''}`;
+    return;
+  }
+
+  // ── Unsupported ───────────────────────────────────────
+  panel.innerHTML=`<div class="fi-preview-unsupported">Preview not available for .${ext} files.<br>The document will still be converted and submitted correctly.</div>`;
 }
 
 // ── INIT ──────────────────────────────────────────────────
