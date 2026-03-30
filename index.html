@@ -33,25 +33,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .logo-ring svg{width:22px;height:22px;color:var(--gold)}
 .hdr-text h1{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:700;color:#fff;line-height:1.15}
 .hdr-text p{font-size:12px;color:rgba(255,255,255,.5);margin-top:3px}
-.hdr-actions{display:flex;gap:8px;flex-shrink:0}
-.hbtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.75);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:7px 13px;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap}
-.hbtn:hover{background:rgba(255,255,255,.16);color:#fff}
-.hbtn svg{width:13px;height:13px}
 .prog-strip{margin-top:22px;display:flex;gap:5px}
 .pseg{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.1);transition:background .4s}
 .pseg.lit{background:var(--gold)}
 
 /* MAIN */
 .main{width:100%;max-width:700px;padding:24px 20px 60px}
-
-/* BANNERS */
-.banner{display:none;align-items:center;gap:10px;border-radius:var(--r);padding:12px 15px;font-size:13px;margin-bottom:14px;cursor:pointer}
-.banner.show{display:flex}
-.banner svg{width:17px;height:17px;flex-shrink:0}
-.banner-warn{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
-.banner-warn svg{color:var(--gold)}
-.banner-ok{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);cursor:default}
-.banner-ok svg{color:var(--green)}
 
 /* STEP TRACK */
 .track{display:flex;align-items:center;margin-bottom:24px}
@@ -186,47 +173,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .toast.err{background:var(--red)}
 .toast.ok{background:var(--green)}
 
-/* MODALS */
-.modal-bg{position:fixed;inset:0;background:rgba(14,31,61,.6);z-index:150;display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
-.modal-bg.show{display:flex}
-.modal{background:#fff;border-radius:var(--r2);width:100%;max-width:520px;overflow:hidden;margin:auto}
-.mhdr{background:var(--navy);padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
-.mhdr h2{font-family:'Cormorant Garamond',serif;font-size:18px;color:#fff}
-.mcls{background:rgba(255,255,255,.12);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:background .2s}
-.mcls:hover{background:rgba(255,255,255,.22)}
-.mbody{padding:22px}
-.msec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.mhint{font-size:13px;color:var(--ink2);background:var(--navy-bg);border-radius:var(--r);padding:12px 14px;line-height:1.55;margin-bottom:14px}
-.mhint a{color:var(--gold);text-decoration:none} .mhint a:hover{text-decoration:underline}
-.mhint code{background:rgba(14,31,61,.08);padding:1px 5px;border-radius:3px;font-size:12px}
-.mfld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.mfld label{font-size:11px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
-.mfld input{height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);outline:none;transition:border-color .2s}
-.mfld input:focus{border-color:var(--navy2)}
-.mfoot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
-.msave{background:var(--navy);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:10px 22px;border-radius:var(--r);cursor:pointer;transition:background .2s}
-.msave:hover{background:var(--navy2)}
-.mcancel{background:none;border:1.5px solid var(--border);color:var(--ink3);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 18px;border-radius:var(--r);cursor:pointer;transition:all .2s}
-.mcancel:hover{border-color:var(--ink3);color:var(--ink)}
-.status-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
-.pill-ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.pill-no{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-
-/* STEPS GUIDE */
-.steps-guide{counter-reset:step;display:flex;flex-direction:column;gap:0}
-.sg-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
-.sg-item:last-child{border-bottom:none}
-.sg-num{width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.sg-text{font-size:13px;color:var(--ink2);line-height:1.5}
-.sg-text strong{color:var(--navy)}
-.sg-text code{background:rgba(14,31,61,.08);padding:1px 5px;border-radius:3px;font-size:11px}
-
 @media(max-width:520px){
   .grid{grid-template-columns:1fr}
   .csec,.swrap{padding:18px 16px}
   .hdr-inner{padding:20px 16px 18px}
-  .mbody{padding:16px}
-  .proc-card{padding:24px 18px}
 }
 </style>
 </head>
@@ -244,10 +194,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
           <p>Document Submission Portal — RCL</p>
         </div>
       </div>
-      <div class="hdr-actions">
-        <button class="hbtn" onclick="openSetup()">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>
- 
+    </div>
+    <div class="prog-strip" id="progStrip">
+      <div class="pseg" id="ps1"></div><div class="pseg" id="ps2"></div>
+      <div class="pseg" id="ps3"></div><div class="pseg" id="ps4"></div>
+      <div class="pseg" id="ps5"></div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
 
   <div id="formView">
     <div class="track">
@@ -370,85 +326,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 
 <div class="toast" id="toast"></div>
 
-<!-- SETUP MODAL -->
-<div class="modal-bg" id="setupModal">
-  <div class="modal">
-    <div class="mhdr">
-      <h2>Google Drive & Email Setup</h2>
-      <button class="mcls" onclick="closeSetup()">✕</button>
-    </div>
-    <div class="mbody">
-      <div class="msec-title">Step-by-step: Deploy your Google Apps Script</div>
-      <div class="steps-guide">
-        <div class="sg-item">
-          <div class="sg-num">1</div>
-          <div class="sg-text">Go to <a href="https://script.google.com" target="_blank" style="color:var(--gold)">script.google.com</a> — sign in with <strong>applications.whiterock@gmail.com</strong></div>
-        </div>
-        <div class="sg-item">
-          <div class="sg-num">2</div>
-          <div class="sg-text">Click <strong>New Project</strong> → delete the default code → paste the entire contents of <code>Code.gs</code> (the file I gave you)</div>
-        </div>
-        <div class="sg-item">
-          <div class="sg-num">3</div>
-          <div class="sg-text">Click <strong>Deploy → New Deployment</strong> → Type: <strong>Web App</strong> → Execute as: <strong>Me</strong> → Access: <strong>Anyone</strong> → Deploy</div>
-        </div>
-        <div class="sg-item">
-          <div class="sg-num">4</div>
-          <div class="sg-text">Copy the <strong>Web App URL</strong> (starts with <code>https://script.google.com/macros/s/...</code>) and paste it below</div>
-        </div>
-      </div>
-      <div style="height:16px"></div>
-      <div class="mfld">
-        <label>Google Apps Script Web App URL</label>
-        <input type="url" id="cfgUrl" placeholder="https://script.google.com/macros/s/ABC.../exec">
-      </div>
-      <div style="font-size:12px;color:var(--ink3);margin-top:4px">
-        Status: <span id="urlStatus"></span>
-      </div>
-    </div>
-    <div class="mfoot">
-      <button class="mcancel" onclick="closeSetup()">Cancel</button>
-      <button class="msave" onclick="saveSetup()">Save & Connect</button>
-    </div>
-  </div>
-</div>
-
 <script>
-// ── BAKED-IN ────────────────────────────────────────────
+// ── BAKED-IN CONFIG ───────────────────────────────────────
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWJc7DNVL2Q3WbcFJFzcyrmDsHuXxWbl_xB_EykOY8_UEpPpOB3uSj6Z7Sy2L3y6fGAA/exec';
 
-// ── CONFIG (localStorage) ────────────────────────────────
-let cfg = {};
-function loadCfg(){
-  try{ cfg = JSON.parse(localStorage.getItem('wr_cfg')||'{}'); }catch(e){ cfg={}; }
-}
-function saveSetup(){
-  const url = document.getElementById('cfgUrl').value.trim();
-  if(!url){ showToast('Please enter the Apps Script URL','err'); return; }
-  cfg.scriptUrl = url;
-  localStorage.setItem('wr_cfg', JSON.stringify(cfg));
-  closeSetup();
-  updateBanners();
-  showToast('Connected! Ready to receive submissions.','ok');
-}
-function openSetup(){
-  loadCfg();
-  document.getElementById('cfgUrl').value = cfg.scriptUrl||'';
-  const st = document.getElementById('urlStatus');
-  st.innerHTML = cfg.scriptUrl
-    ? '<span class="status-pill pill-ok">✓ Connected</span>'
-    : '<span class="status-pill pill-no">Not configured</span>';
-  document.getElementById('setupModal').classList.add('show');
-}
-function closeSetup(){ document.getElementById('setupModal').classList.remove('show'); }
-
-function updateBanners(){
-  document.getElementById('setupBanner').classList.remove('show');
-  document.getElementById('okBanner').classList.add('show');
-}
-
 // ── FILE MANAGEMENT ──────────────────────────────────────
-let files = []; // [{id, file, ext, type}]
+let files = [];
 let nextId = 0;
 
 const EXT_TYPE = {
@@ -554,7 +437,6 @@ function renderFileList(){
         </button>
       </div>
       <div class="fi-preview-panel" id="preview-${f.id}"></div>`;
-    // restore selected value after render
     if(selVal){
       setTimeout(()=>{
         const s=document.getElementById('dtype-'+f.id);
@@ -693,7 +575,6 @@ async function handleSubmit(e){
     });
     return;
   }
-  cfg.scriptUrl = SCRIPT_URL;
 
   const schoolEl=document.getElementById('fSchool');
   const schoolName=schoolEl.options[schoolEl.selectedIndex]?.text||'';
@@ -737,15 +618,13 @@ async function handleSubmit(e){
     const payload={...params, files:converted};
     const fd=new FormData();
     fd.append('data', JSON.stringify(payload));
-    // Try with CORS first, fallback to no-cors
     let res;
     try{
-      res=await fetch(cfg.scriptUrl,{method:'POST',body:fd});
+      res=await fetch(SCRIPT_URL,{method:'POST',body:fd});
       const json=await res.json();
       if(json.folder) folderUrl=json.folder;
     }catch(corsErr){
-      // CORS blocked — send no-cors (fire and forget, assume success)
-      await fetch(cfg.scriptUrl,{method:'POST',mode:'no-cors',body:fd});
+      await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:fd});
     }
     setProc(2,'ok');
     setProc(3,'ok');
@@ -802,7 +681,6 @@ function showToast(msg,type=''){
   t.textContent=msg; t.className='toast show'+(type?' '+type:'');
   setTimeout(()=>{t.className='toast';},3500);
 }
-
 
 // ── SCHOOL → PROGRAMME DATA ───────────────────────────────
 const PROGRAMMES = {
@@ -1011,9 +889,6 @@ async function generatePreview(f, panel){
 }
 
 // ── INIT ──────────────────────────────────────────────────
-loadCfg();
-if(!cfg.scriptUrl){ cfg.scriptUrl = SCRIPT_URL; localStorage.setItem('wr_cfg', JSON.stringify(cfg)); }
-updateBanners();
 renderFileList();
 </script>
 </body>
