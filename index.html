@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -95,7 +96,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 
 /* FILE LIST */
 .file-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-.fitem{display:flex;align-items:center;gap:12px;background:var(--navy-bg);border:1.5px solid #b3c8ed;border-radius:var(--r);padding:11px 13px;animation:slideIn .25s ease}
+.fitem{display:flex;flex-direction:column;gap:0;background:var(--navy-bg);border:1.5px solid #b3c8ed;border-radius:var(--r);padding:11px 13px;animation:slideIn .25s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .fitem.converting{border-color:var(--amber-border);background:var(--amber-bg)}
 .fitem.done{border-color:var(--green-border);background:var(--green-bg)}
@@ -119,6 +120,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .fi-dtype select:focus{border-color:var(--navy2)}
 .fi-dtype select.unlabelled{border-color:var(--amber-border);background-color:var(--amber-bg)}
 .fi-dtype select.labelled{border-color:var(--green-border)}
+.fi-preview-btn{background:none;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;color:var(--ink3);padding:4px 9px;display:inline-flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;margin-top:7px;transition:all .2s}
+.fi-preview-btn:hover{border-color:var(--navy2);color:var(--navy2);background:var(--navy-bg)}
+.fi-preview-btn.open{border-color:var(--navy2);color:var(--navy2);background:var(--navy-bg)}
+.fi-preview-btn svg{width:12px;height:12px}
+.fi-preview-panel{display:none;margin-top:10px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);background:var(--paper)}
+.fi-preview-panel.show{display:block}
+.fi-preview-panel canvas{display:block;width:100%;height:auto;max-height:320px;object-fit:contain;background:#fff}
+.fi-preview-panel img{display:block;width:100%;max-height:320px;object-fit:contain;background:#fff}
+.fi-preview-text{padding:12px 14px;font-size:12px;line-height:1.6;color:var(--ink2);font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto;background:#fff}
+.fi-preview-loading{padding:20px;text-align:center;font-size:12px;color:var(--ink3);background:#fff}
+.fi-preview-unsupported{padding:16px;text-align:center;font-size:12px;color:var(--ink3);background:#fff}
 .files-empty{display:none;font-size:13px;color:var(--ink3);text-align:center;padding:10px 0}
 .files-count{font-size:12px;color:var(--ink3);margin-top:10px;text-align:right}
 .files-count span{font-weight:600;color:var(--navy)}
@@ -232,14 +244,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
           <p>Document Submission Portal — RCL</p>
         </div>
       </div>
-      <div class="hdr-actions" style="display:none">
+      <div class="hdr-actions">
         <button class="hbtn" onclick="openSetup()">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>
           Setup
-        </button>
-        <button class="hbtn" onclick="openWA()">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.533 5.845L.057 23.197a.75.75 0 00.923.923l5.352-1.476A11.942 11.942 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.951 9.951 0 01-5.39-1.48l-.387-.231-4.007 1.104 1.104-4.007-.231-.387A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-          WhatsApp
         </button>
       </div>
     </div>
@@ -378,7 +386,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
       <li id="pl1"><div class="pind" id="pi1">1</div> Converting documents to PDF</li>
       <li id="pl2"><div class="pind" id="pi2">2</div> Uploading to Google Drive</li>
       <li id="pl3"><div class="pind" id="pi3">3</div> Sending email notification</li>
-      <li id="pl4"><div class="pind" id="pi4">4</div> Sending WhatsApp alert</li>
     </ul>
   </div>
 </div>
@@ -428,43 +435,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
   </div>
 </div>
 
-<!-- WHATSAPP MODAL -->
-<div class="modal-bg" id="waModal">
-  <div class="modal">
-    <div class="mhdr">
-      <h2>WhatsApp Notifications</h2>
-      <button class="mcls" onclick="closeWA()">✕</button>
-    </div>
-    <div class="mbody">
-      <div class="mhint">
-        Get your token from <a href="https://developers.facebook.com/apps" target="_blank">developers.facebook.com</a> →
-        your App → WhatsApp → API Setup.<br><br>
-        Copy the <strong>Temporary Access Token</strong> (starts with <code>EAAG...</code>)
-        and your <strong>Phone Number ID</strong> (long number on the same page).
-      </div>
-      <div class="mfld">
-        <label>Meta Access Token</label>
-        <input type="text" id="waToken" placeholder="EAAGxxxxxxxxxxxxx">
-      </div>
-      <div class="mfld">
-        <label>Phone Number ID</label>
-        <input type="text" id="waPhoneId" placeholder="e.g. 123456789012345">
-      </div>
-      <div style="font-size:13px;color:var(--ink3);margin-top:4px">
-        Alerts will be sent to: <strong>+234 907 456 1545</strong>
-        &nbsp;<span id="waStatusChip"></span>
-      </div>
-    </div>
-    <div class="mfoot">
-      <button class="mcancel" onclick="closeWA()">Cancel</button>
-      <button class="msave" onclick="saveWA()">Save WhatsApp</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // ── BAKED-IN ────────────────────────────────────────────
-const MY_WA = '2349074561545';
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWJc7DNVL2Q3WbcFJFzcyrmDsHuXxWbl_xB_EykOY8_UEpPpOB3uSj6Z7Sy2L3y6fGAA/exec';
 
 // ── CONFIG (localStorage) ────────────────────────────────
@@ -491,29 +463,6 @@ function openSetup(){
   document.getElementById('setupModal').classList.add('show');
 }
 function closeSetup(){ document.getElementById('setupModal').classList.remove('show'); }
-
-// WhatsApp config
-let waToken='', waPhoneId='';
-function loadWA(){
-  try{ const s=JSON.parse(localStorage.getItem('wr_wa')||'{}'); waToken=s.token||''; waPhoneId=s.pid||''; }catch(e){}
-}
-function saveWA(){
-  waToken = document.getElementById('waToken').value.trim();
-  waPhoneId = document.getElementById('waPhoneId').value.trim();
-  localStorage.setItem('wr_wa', JSON.stringify({token:waToken,pid:waPhoneId}));
-  closeWA(); updateBanners();
-  showToast('WhatsApp configured!','ok');
-}
-function openWA(){
-  loadWA();
-  document.getElementById('waToken').value = waToken;
-  document.getElementById('waPhoneId').value = waPhoneId;
-  document.getElementById('waStatusChip').innerHTML = waToken
-    ? '<span class="status-pill pill-ok">✓ Active</span>'
-    : '<span class="status-pill pill-no">Not set</span>';
-  document.getElementById('waModal').classList.add('show');
-}
-function closeWA(){ document.getElementById('waModal').classList.remove('show'); }
 
 function updateBanners(){
   document.getElementById('setupBanner').classList.remove('show');
@@ -585,7 +534,7 @@ function renderFileList(){
   countEl.style.display='block';
   countNum.textContent = files.length;
 
-  const typeOpts = DOC_TYPES.map(t=>`<option value="${t}">${t}</option>`).join('');
+  const typeOpts = DOC_TYPES.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
 
   files.forEach(f=>{
     const isPDF = f.ext==='pdf';
@@ -605,21 +554,28 @@ function renderFileList(){
     div.className='fitem';
     div.id='fitem-'+f.id;
     div.innerHTML=`
-      <div class="fic ${icClass}">${icLabel}</div>
-      <div class="fi-info" style="flex:1;min-width:0">
-        <div class="fi-name">${esc(f.file.name)}</div>
-        <div class="fi-meta">${fmtSize(f.file.size)} · ${f.ext.toUpperCase()}</div>
-        ${chip}
-        <div class="fi-dtype">
-          <select id="dtype-${f.id}" class="${selClass}" onchange="setDocType(${f.id}, this.value)">
-            <option value="" disabled ${selVal?'':'selected'}>— Select document type —</option>
-            ${typeOpts}
-          </select>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div class="fic ${icClass}">${icLabel}</div>
+        <div class="fi-info" style="flex:1;min-width:0">
+          <div class="fi-name">${esc(f.file.name)}</div>
+          <div class="fi-meta">${fmtSize(f.file.size)} · ${f.ext.toUpperCase()}</div>
+          ${chip}
+          <div class="fi-dtype">
+            <select id="dtype-${f.id}" class="${selClass}" onchange="setDocType(${f.id}, this.value)">
+              <option value="" disabled ${selVal?'':'selected'}>— Select document type —</option>
+              ${typeOpts}
+            </select>
+          </div>
+          <button type="button" class="fi-preview-btn" id="pbtn-${f.id}" onclick="togglePreview(${f.id})">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>
+            Preview
+          </button>
         </div>
+        <button type="button" class="fi-remove" onclick="removeFile(${f.id})" title="Remove">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4L4 12M4 4l8 8"/></svg>
+        </button>
       </div>
-      <button type="button" class="fi-remove" onclick="removeFile(${f.id})" title="Remove" style="align-self:flex-start;margin-top:2px">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4L4 12M4 4l8 8"/></svg>
-      </button>`;
+      <div class="fi-preview-panel" id="preview-${f.id}"></div>`;
     // restore selected value after render
     if(selVal){
       setTimeout(()=>{
@@ -631,7 +587,7 @@ function renderFileList(){
   });
 }
 
-function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmtSize(b){ if(b<1024)return b+' B'; if(b<1048576)return (b/1024).toFixed(1)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
 
 // File input change
@@ -746,18 +702,6 @@ function setProc(n,state){
   else ind.textContent=n;
 }
 
-// ── WHATSAPP ──────────────────────────────────────────────
-async function sendWA(params, fileCount){
-  if(!waToken||!waPhoneId) throw new Error('No WA token');
-  const msg=`📄 *New Submission — Whiterock Admissions*\n\n👤 *Name:* ${params.name}\n📧 *Email:* ${params.email}\n📞 *Phone:* ${params.phone}\n🎓 *Programme:* ${params.program}\n📎 *Documents:* ${fileCount} file(s)\n⏰ ${new Date().toLocaleString('en-NG')}\n\n✅ Saved to Drive & emailed to your Gmail.`;
-  const res=await fetch(`https://graph.facebook.com/v19.0/${waPhoneId}/messages`,{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+waToken,'Content-Type':'application/json'},
-    body:JSON.stringify({messaging_product:'whatsapp',to:MY_WA,type:'text',text:{body:msg}})
-  });
-  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'WA error');}
-}
-
 // ── SUBMIT ────────────────────────────────────────────────
 async function handleSubmit(e){
   e.preventDefault();
@@ -765,7 +709,6 @@ async function handleSubmit(e){
   const unlabelled=files.filter(f=>!f.docType);
   if(unlabelled.length>0){
     showToast(`Please select a document type for all ${files.length} file(s).`,'err');
-    // highlight the missing ones
     unlabelled.forEach(f=>{
       const s=document.getElementById('dtype-'+f.id);
       if(s){s.classList.add('unlabelled');s.closest('.fitem').style.borderColor='var(--amber-border)';}
@@ -786,7 +729,7 @@ async function handleSubmit(e){
 
   document.getElementById('overlay').classList.add('show');
   document.getElementById('sbtn').disabled=true;
-  setProc(1,''); setProc(2,''); setProc(3,''); setProc(4,'');
+  setProc(1,''); setProc(2,''); setProc(3,'');
 
   // Step 1: Convert all files
   let converted=[];
@@ -837,16 +780,6 @@ async function handleSubmit(e){
     return;
   }
 
-  // Step 4: WhatsApp (non-fatal)
-  setProc(4,'on');
-  try{
-    await sendWA(params, converted.length);
-    setProc(4,'ok');
-  }catch(err){
-    setProc(4,'err');
-    console.warn('WhatsApp skipped:', err.message);
-  }
-
   await delay(600);
   document.getElementById('overlay').classList.remove('show');
   showSuccess(params, converted.length, folderUrl);
@@ -858,10 +791,10 @@ function showSuccess(params, count, folderUrl){
   for(let i=1;i<=5;i++) document.getElementById('ps'+i).classList.add('lit');
   document.getElementById('formView').style.display='none';
   document.getElementById('smeta').innerHTML=`
-    <div><span class="sl">Name</span><span class="sv">${params.name}</span></div>
-    <div><span class="sl">Email</span><span class="sv">${params.email}</span></div>
-    <div><span class="sl">School</span><span class="sv">${params.school}</span></div>
-    <div><span class="sl">Programme</span><span class="sv">${params.program}</span></div>
+    <div><span class="sl">Name</span><span class="sv">${esc(params.name)}</span></div>
+    <div><span class="sl">Email</span><span class="sv">${esc(params.email)}</span></div>
+    <div><span class="sl">School</span><span class="sv">${esc(params.school)}</span></div>
+    <div><span class="sl">Programme</span><span class="sv">${esc(params.program)}</span></div>
     <div><span class="sl">Documents</span><span class="sv">${count} file(s) submitted</span></div>
     <div><span class="sl">Sent to</span><span class="sv">applications.whiterock@gmail.com</span></div>`;
   if(folderUrl){
@@ -1017,16 +950,92 @@ function onSchoolChange(){
   });
   wrap.style.display='';
   sel.removeAttribute('disabled');
-  // hook change event for progress
-  sel.onchange = updateProgress;
+  sel.addEventListener('change', updateProgress);
   updateProgress();
+}
+
+// ── PREVIEW ───────────────────────────────────────────────
+async function togglePreview(id){
+  const panel = document.getElementById('preview-'+id);
+  const btn   = document.getElementById('pbtn-'+id);
+  if(panel.classList.contains('show')){
+    panel.classList.remove('show');
+    btn.classList.remove('open');
+    btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg> Preview`;
+    return;
+  }
+  panel.classList.add('show');
+  btn.classList.add('open');
+  btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg> Hide`;
+  if(panel.dataset.loaded) return;
+  panel.dataset.loaded='1';
+  panel.innerHTML='<div class="fi-preview-loading">Generating preview...</div>';
+  const f = files.find(x=>x.id===id);
+  if(!f){ panel.innerHTML='<div class="fi-preview-unsupported">File not found.</div>'; return; }
+  try{ await generatePreview(f, panel); }
+  catch(err){ panel.innerHTML='<div class="fi-preview-unsupported">Could not generate preview.</div>'; }
+}
+
+async function generatePreview(f, panel){
+  const ext = f.ext;
+
+  if(['jpg','jpeg','png','gif','bmp','webp'].includes(ext)){
+    const url = URL.createObjectURL(f.file);
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = 'preview';
+    img.style.cssText = 'display:block;width:100%;max-height:320px;object-fit:contain;background:#fff';
+    img.onerror = function(){ panel.innerHTML='<div class="fi-preview-unsupported">Could not load image.</div>'; };
+    panel.innerHTML = '';
+    panel.appendChild(img);
+    return;
+  }
+
+  if(ext==='pdf'){
+    const rawAb = await f.file.arrayBuffer();
+    const ab = new Uint8Array(rawAb);
+    if(typeof pdfjsLib === 'undefined'){
+      panel.innerHTML='<div class="fi-preview-unsupported">PDF preview unavailable.</div>';
+      return;
+    }
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf = await pdfjsLib.getDocument({data:ab,verbosity:0}).promise;
+    const page = await pdf.getPage(1);
+    const vp = page.getViewport({scale:1.5});
+    const canvas = document.createElement('canvas');
+    canvas.width = vp.width;
+    canvas.height = vp.height;
+    canvas.style.cssText = 'display:block;width:100%;height:auto';
+    await page.render({canvasContext:canvas.getContext('2d'), viewport:vp}).promise;
+    panel.innerHTML = '';
+    panel.appendChild(canvas);
+    return;
+  }
+
+  if(ext==='docx'){
+    const ab = await f.file.arrayBuffer();
+    const result = await mammoth.extractRawText({arrayBuffer:ab});
+    const snippet = result.value.slice(0,800).trim() || '(empty document)';
+    const more = result.value.length > 800 ? '\n...' : '';
+    panel.innerHTML = '<div class="fi-preview-text">' + esc(snippet) + more + '</div>';
+    return;
+  }
+
+  if(['txt','rtf','doc'].includes(ext)){
+    const text = await f.file.text();
+    const snippet = text.slice(0,800).trim() || '(empty file)';
+    const more = text.length > 800 ? '\n...' : '';
+    panel.innerHTML = '<div class="fi-preview-text">' + esc(snippet) + more + '</div>';
+    return;
+  }
+
+  panel.innerHTML = '<div class="fi-preview-unsupported">Preview not available for .' + ext + ' files — document will still be submitted correctly.</div>';
 }
 
 // ── INIT ──────────────────────────────────────────────────
 loadCfg();
-// Always ensure the baked-in URL is set
 if(!cfg.scriptUrl){ cfg.scriptUrl = SCRIPT_URL; localStorage.setItem('wr_cfg', JSON.stringify(cfg)); }
-loadWA(); updateBanners();
+updateBanners();
 renderFileList();
 </script>
 </body>
