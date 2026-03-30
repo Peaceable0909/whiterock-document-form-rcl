@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -21,8 +20,6 @@
   --r:8px;--r2:12px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-
-/* HEADER */
 .hdr{width:100%;background:var(--navy);position:relative;overflow:hidden}
 .hdr::before{content:'';position:absolute;top:-70px;right:-50px;width:240px;height:240px;border-radius:50%;border:1px solid rgba(184,149,42,.15)}
 .hdr::after{content:'';position:absolute;bottom:-50px;left:20px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(255,255,255,.05)}
@@ -40,11 +37,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .prog-strip{margin-top:22px;display:flex;gap:5px}
 .pseg{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.1);transition:background .4s}
 .pseg.lit{background:var(--gold)}
-
-/* MAIN */
 .main{width:100%;max-width:700px;padding:24px 20px 60px}
-
-/* BANNERS */
 .banner{display:none;align-items:center;gap:10px;border-radius:var(--r);padding:12px 15px;font-size:13px;margin-bottom:14px;cursor:pointer}
 .banner.show{display:flex}
 .banner svg{width:17px;height:17px;flex-shrink:0}
@@ -52,23 +45,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .banner-warn svg{color:var(--gold)}
 .banner-ok{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);cursor:default}
 .banner-ok svg{color:var(--green)}
-
-/* STEP TRACK */
 .track{display:flex;align-items:center;margin-bottom:24px}
 .tstep{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;color:var(--ink3)}
 .tdot{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink3);background:var(--white);transition:all .3s;flex-shrink:0}
 .tstep.on{color:var(--navy)} .tstep.on .tdot{background:var(--navy);border-color:var(--navy);color:#fff}
 .tstep.ok{color:var(--green)} .tstep.ok .tdot{background:var(--green);border-color:var(--green);color:#fff}
 .tline{flex:1;height:1px;background:var(--border);margin:0 8px;max-width:48px}
-
-/* CARD */
 .card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .csec{padding:24px 28px;border-bottom:1px solid var(--border)}
 .csec:last-child{border-bottom:none}
 .stitle{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:3px}
 .ssub{font-size:13px;color:var(--ink3);margin-bottom:18px}
-
-/* FORM */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .full{grid-column:1/-1}
 .fld{display:flex;flex-direction:column;gap:5px}
@@ -78,8 +65,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .fld input:focus,.fld select:focus{border-color:var(--navy2);box-shadow:0 0 0 3px rgba(26,52,100,.1)}
 .fld input::placeholder{color:#c0bab0}
 .fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7a7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px}
-
-/* DROP ZONE */
 .dropzone{border:2px dashed var(--border);border-radius:var(--r2);padding:32px 20px;text-align:center;cursor:pointer;position:relative;background:var(--paper);transition:all .2s}
 .dropzone:hover,.dropzone.over{border-color:var(--navy2);background:var(--navy-bg)}
 .dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
@@ -93,12 +78,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .f-img{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
 .f-doc{background:var(--navy-bg);color:var(--navy2);border:1px solid #b0c4e8}
 .f-oth{background:#f0f0f0;color:#555;border:1px solid #d8d8d8}
-
-/* FILE LIST */
 .file-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .fitem{display:flex;flex-direction:column;gap:0;background:var(--navy-bg);border:1.5px solid #b3c8ed;border-radius:var(--r);padding:11px 13px;animation:slideIn .25s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.fitem.converting{border-color:var(--amber-border);background:var(--amber-bg)}
 .fitem.done{border-color:var(--green-border);background:var(--green-bg)}
 .fitem.error{border-color:var(--red-border);background:var(--red-bg)}
 .fic{width:38px;height:38px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;letter-spacing:.04em;flex-shrink:0}
@@ -112,7 +94,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .fi-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;border-radius:20px;padding:2px 8px;margin-top:4px}
 .chip-pass{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
 .chip-conv{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.chip-wait{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
 .fi-remove{background:none;border:none;cursor:pointer;color:var(--ink3);padding:4px;border-radius:4px;display:flex;transition:color .2s;flex-shrink:0}
 .fi-remove:hover{color:var(--red)}
 .fi-dtype{margin-top:8px;width:100%}
@@ -120,30 +101,57 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .fi-dtype select:focus{border-color:var(--navy2)}
 .fi-dtype select.unlabelled{border-color:var(--amber-border);background-color:var(--amber-bg)}
 .fi-dtype select.labelled{border-color:var(--green-border)}
-.fi-preview-btn{background:none;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;color:var(--ink3);padding:4px 9px;display:inline-flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;margin-top:7px;transition:all .2s}
-.fi-preview-btn:hover{border-color:var(--navy2);color:var(--navy2);background:var(--navy-bg)}
-.fi-preview-btn.open{border-color:var(--navy2);color:var(--navy2);background:var(--navy-bg)}
+
+/* ── PREVIEW (new approach) ── */
+.fi-preview-btn{
+  background:none;border:1px solid var(--border);border-radius:var(--r);
+  cursor:pointer;color:var(--ink3);padding:5px 10px;
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;
+  margin-top:8px;transition:all .2s;
+}
+.fi-preview-btn:hover,.fi-preview-btn.open{border-color:var(--navy2);color:var(--navy2);background:var(--navy-bg)}
 .fi-preview-btn svg{width:12px;height:12px}
-.fi-preview-panel{display:none;margin-top:10px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);background:var(--paper)}
+/* panel */
+.fi-preview-panel{
+  display:none;margin-top:10px;border-radius:var(--r);
+  overflow:hidden;border:1px solid var(--border);background:#fff;
+}
 .fi-preview-panel.show{display:block}
-.fi-preview-panel canvas{display:block;width:100%;height:auto;max-height:320px;object-fit:contain;background:#fff}
-.fi-preview-panel img{display:block;width:100%;max-height:320px;object-fit:contain;background:#fff}
-.fi-preview-text{padding:12px 14px;font-size:12px;line-height:1.6;color:var(--ink2);font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto;background:#fff}
-.fi-preview-loading{padding:20px;text-align:center;font-size:12px;color:var(--ink3);background:#fff}
-.fi-preview-unsupported{padding:16px;text-align:center;font-size:12px;color:var(--ink3);background:#fff}
+/* image preview */
+.pvw-img{display:block;width:100%;max-height:340px;object-fit:contain;background:#f9f9f9}
+/* PDF preview via iframe */
+.pvw-iframe{
+  display:block;width:100%;height:420px;border:none;background:#f9f9f9;
+}
+/* DOCX/text — rendered HTML or plain text */
+.pvw-html{
+  padding:16px 18px;font-size:13px;line-height:1.7;color:var(--ink2);
+  max-height:360px;overflow-y:auto;background:#fff;
+  font-family:'DM Sans',sans-serif;
+}
+.pvw-html h1,.pvw-html h2,.pvw-html h3{color:var(--navy);margin:10px 0 4px;font-family:'Cormorant Garamond',serif}
+.pvw-html p{margin-bottom:8px}
+.pvw-html ul,.pvw-html ol{padding-left:20px;margin-bottom:8px}
+.pvw-html table{border-collapse:collapse;width:100%;font-size:12px;margin-bottom:8px}
+.pvw-html td,.pvw-html th{border:1px solid var(--border);padding:4px 8px;text-align:left}
+.pvw-html th{background:var(--navy-bg);color:var(--navy);font-weight:600}
+.pvw-text{
+  padding:14px 16px;font-size:12px;line-height:1.65;color:var(--ink2);
+  font-family:monospace;white-space:pre-wrap;max-height:300px;overflow-y:auto;background:#fff;
+}
+.pvw-loading{padding:22px;text-align:center;font-size:13px;color:var(--ink3);background:#fff}
+.pvw-none{padding:18px;text-align:center;font-size:12px;color:var(--ink3);background:#fff}
+
 .files-empty{display:none;font-size:13px;color:var(--ink3);text-align:center;padding:10px 0}
 .files-count{font-size:12px;color:var(--ink3);margin-top:10px;text-align:right}
 .files-count span{font-weight:600;color:var(--navy)}
-
-/* SUBMIT */
 .swrap{padding:20px 28px 24px}
 .sbtn{width:100%;height:52px;background:var(--navy);color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .2s}
 .sbtn:hover{background:var(--navy2);box-shadow:0 6px 24px rgba(14,31,61,.22);transform:translateY(-1px)}
 .sbtn:active{transform:translateY(0)}
 .sbtn:disabled{background:#9ba8be;cursor:not-allowed;transform:none;box-shadow:none}
 .snote{font-size:12px;color:var(--ink3);text-align:center;margin-top:10px}
-
-/* OVERLAY */
 .overlay{display:none;position:fixed;inset:0;background:rgba(14,31,61,.6);z-index:100;align-items:center;justify-content:center}
 .overlay.show{display:flex}
 .proc-card{background:#fff;border-radius:var(--r2);padding:32px 40px;text-align:center;max-width:360px;width:90%}
@@ -162,8 +170,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(14,31,61,.25)}50%{box-shadow:0 0 0 4px rgba(14,31,61,.08)}}
 .spin{width:8px;height:8px;border:2px solid transparent;border-top-color:var(--navy);border-radius:50%;animation:rot .7s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
-
-/* SUCCESS */
 .success{display:none;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);text-align:center;padding:48px 32px}
 .success.show{display:block}
 .sic{width:68px;height:68px;border-radius:50%;background:var(--green-bg);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
@@ -172,21 +178,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .success > p{font-size:14px;color:var(--ink3);line-height:1.6;max-width:320px;margin:0 auto 20px}
 .smeta{background:var(--navy-bg);border-radius:var(--r);padding:14px 18px;font-size:13px;text-align:left;display:inline-block;min-width:260px;margin-bottom:20px}
 .smeta div{display:flex;justify-content:space-between;padding:3px 0;gap:16px}
-.smeta .sl{color:var(--ink3)}
-.smeta .sv{color:var(--navy);font-weight:600;text-align:right}
+.smeta .sl{color:var(--ink3)}.smeta .sv{color:var(--navy);font-weight:600;text-align:right}
 .drive-link{display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);font-size:13px;font-weight:600;padding:8px 16px;border-radius:20px;text-decoration:none;margin-bottom:20px;transition:all .2s}
 .drive-link:hover{background:var(--green);color:#fff}
 .drive-link svg{width:14px;height:14px}
 .again-btn{background:none;border:1.5px solid var(--navy);color:var(--navy);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:11px 26px;border-radius:var(--r);cursor:pointer;transition:all .2s}
 .again-btn:hover{background:var(--navy);color:#fff}
-
-/* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:11px 20px;border-radius:100px;z-index:200;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;max-width:90vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
-.toast.err{background:var(--red)}
-.toast.ok{background:var(--green)}
-
-/* MODALS */
+.toast.err{background:var(--red)}.toast.ok{background:var(--green)}
 .modal-bg{position:fixed;inset:0;background:rgba(14,31,61,.6);z-index:150;display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
 .modal-bg.show{display:flex}
 .modal{background:#fff;border-radius:var(--r2);width:100%;max-width:520px;overflow:hidden;margin:auto}
@@ -196,9 +196,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .mcls:hover{background:rgba(255,255,255,.22)}
 .mbody{padding:22px}
 .msec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.mhint{font-size:13px;color:var(--ink2);background:var(--navy-bg);border-radius:var(--r);padding:12px 14px;line-height:1.55;margin-bottom:14px}
-.mhint a{color:var(--gold);text-decoration:none} .mhint a:hover{text-decoration:underline}
-.mhint code{background:rgba(14,31,61,.08);padding:1px 5px;border-radius:3px;font-size:12px}
 .mfld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .mfld label{font-size:11px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
 .mfld input{height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);outline:none;transition:border-color .2s}
@@ -211,8 +208,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .status-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
 .pill-ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
 .pill-no{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-
-/* STEPS GUIDE */
 .steps-guide{counter-reset:step;display:flex;flex-direction:column;gap:0}
 .sg-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
 .sg-item:last-child{border-bottom:none}
@@ -220,18 +215,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .sg-text{font-size:13px;color:var(--ink2);line-height:1.5}
 .sg-text strong{color:var(--navy)}
 .sg-text code{background:rgba(14,31,61,.08);padding:1px 5px;border-radius:3px;font-size:11px}
-
-@media(max-width:520px){
-  .grid{grid-template-columns:1fr}
-  .csec,.swrap{padding:18px 16px}
-  .hdr-inner{padding:20px 16px 18px}
-  .mbody{padding:16px}
-  .proc-card{padding:24px 18px}
-}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.csec,.swrap{padding:18px 16px}.hdr-inner{padding:20px 16px 18px}.mbody{padding:16px}.proc-card{padding:24px 18px}}
 </style>
 </head>
 <body>
-
 <header class="hdr">
   <div class="hdr-inner">
     <div class="hdr-top">
@@ -260,12 +247,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 </header>
 
 <main class="main">
-
   <div class="banner banner-warn" id="setupBanner" onclick="openSetup()">
     <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
     <span><strong>Setup required:</strong> Click here to connect your Google Apps Script URL so documents save to Drive and email works.</span>
   </div>
-
   <div class="banner banner-ok" id="okBanner" style="display:none!important">
     <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd"/></svg>
     <span><strong>Connected!</strong> Documents will be saved to Google Drive and emailed to applications.whiterock@gmail.com</span>
@@ -282,26 +267,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 
     <form id="theForm" onsubmit="handleSubmit(event)">
       <div class="card">
-
-        <!-- PERSONAL INFO -->
         <div class="csec">
           <div class="stitle">Personal Information</div>
           <div class="ssub">Fill in your details accurately</div>
           <div class="grid">
-            <div class="fld full">
-              <label>Full Name <sup>*</sup></label>
-              <input type="text" id="fName" placeholder="e.g. Adaeze Okonkwo" required autocomplete="name">
-            </div>
-            <div class="fld">
-              <label>Email Address <sup>*</sup></label>
-              <input type="email" id="fEmail" placeholder="yourname@email.com" required autocomplete="email">
-            </div>
-            <div class="fld">
-              <label>Phone Number <sup>*</sup></label>
-              <input type="tel" id="fPhone" placeholder="+234 800 000 0000" required autocomplete="tel">
-            </div>
-            <div class="fld full">
-              <label>School / University <sup>*</sup></label>
+            <div class="fld full"><label>Full Name <sup>*</sup></label><input type="text" id="fName" placeholder="e.g. Adaeze Okonkwo" required autocomplete="name"></div>
+            <div class="fld"><label>Email Address <sup>*</sup></label><input type="email" id="fEmail" placeholder="yourname@email.com" required autocomplete="email"></div>
+            <div class="fld"><label>Phone Number <sup>*</sup></label><input type="tel" id="fPhone" placeholder="+234 800 000 0000" required autocomplete="tel"></div>
+            <div class="fld full"><label>School / University <sup>*</sup></label>
               <select id="fSchool" required onchange="onSchoolChange()">
                 <option value="" disabled selected>Select a school...</option>
                 <option value="rcl">Regent College London (RCL)</option>
@@ -312,24 +285,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
             </div>
             <div class="fld full" id="programWrap" style="display:none">
               <label>Programme Intending to Apply For <sup>*</sup></label>
-              <select id="fProgram">
-                <option value="" disabled selected>Select your programme...</option>
-              </select>
+              <select id="fProgram"><option value="" disabled selected>Select your programme...</option></select>
             </div>
           </div>
         </div>
 
-        <!-- UPLOAD -->
         <div class="csec">
           <div class="stitle">Upload Documents</div>
           <div class="ssub">Select one or more files — all formats accepted. Non-PDFs are converted automatically</div>
-
           <div class="dropzone" id="dz">
-            <input type="file" id="fileInput" multiple
-              accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp,.docx,.doc,.txt,.rtf,.ppt,.pptx,.xls,.xlsx">
-            <div class="dz-ic">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-            </div>
+            <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp,.docx,.doc,.txt,.rtf,.ppt,.pptx,.xls,.xlsx">
+            <div class="dz-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
             <h3>Drop files here or click to browse</h3>
             <p>Select multiple files at once — all accepted</p>
             <div class="fmts">
@@ -339,15 +305,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
               <span class="fmt f-oth">PPT · XLS + more</span>
             </div>
           </div>
-
           <div id="fileList" class="file-list"></div>
           <div class="files-empty" id="filesEmpty">No files selected yet</div>
-          <div class="files-count" id="filesCount" style="display:none">
-            <span id="filesCountNum">0</span> file(s) selected
-          </div>
+          <div class="files-count" id="filesCount" style="display:none"><span id="filesCountNum">0</span> file(s) selected</div>
         </div>
 
-        <!-- SUBMIT -->
         <div class="swrap">
           <button type="submit" class="sbtn" id="sbtn">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
@@ -359,11 +321,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
     </form>
   </div>
 
-  <!-- SUCCESS -->
   <div class="success" id="successView">
-    <div class="sic">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-    </div>
+    <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
     <h2>Submission Received!</h2>
     <p>Your documents have been saved to Google Drive and emailed to Whiterock Admissions. You will be contacted soon.</p>
     <div class="smeta" id="smeta"></div>
@@ -377,7 +336,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
   </div>
 </main>
 
-<!-- OVERLAY -->
 <div class="overlay" id="overlay">
   <div class="proc-card">
     <h2>Processing...</h2>
@@ -392,41 +350,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 
 <div class="toast" id="toast"></div>
 
-<!-- SETUP MODAL -->
 <div class="modal-bg" id="setupModal">
   <div class="modal">
-    <div class="mhdr">
-      <h2>Google Drive & Email Setup</h2>
-      <button class="mcls" onclick="closeSetup()">✕</button>
-    </div>
+    <div class="mhdr"><h2>Google Drive & Email Setup</h2><button class="mcls" onclick="closeSetup()">✕</button></div>
     <div class="mbody">
       <div class="msec-title">Step-by-step: Deploy your Google Apps Script</div>
       <div class="steps-guide">
-        <div class="sg-item">
-          <div class="sg-num">1</div>
-          <div class="sg-text">Go to <a href="https://script.google.com" target="_blank" style="color:var(--gold)">script.google.com</a> — sign in with <strong>applications.whiterock@gmail.com</strong></div>
-        </div>
-        <div class="sg-item">
-          <div class="sg-num">2</div>
-          <div class="sg-text">Click <strong>New Project</strong> → delete the default code → paste the entire contents of <code>Code.gs</code> (the file I gave you)</div>
-        </div>
-        <div class="sg-item">
-          <div class="sg-num">3</div>
-          <div class="sg-text">Click <strong>Deploy → New Deployment</strong> → Type: <strong>Web App</strong> → Execute as: <strong>Me</strong> → Access: <strong>Anyone</strong> → Deploy</div>
-        </div>
-        <div class="sg-item">
-          <div class="sg-num">4</div>
-          <div class="sg-text">Copy the <strong>Web App URL</strong> (starts with <code>https://script.google.com/macros/s/...</code>) and paste it below</div>
-        </div>
+        <div class="sg-item"><div class="sg-num">1</div><div class="sg-text">Go to <a href="https://script.google.com" target="_blank" style="color:var(--gold)">script.google.com</a> — sign in with <strong>applications.whiterock@gmail.com</strong></div></div>
+        <div class="sg-item"><div class="sg-num">2</div><div class="sg-text">Click <strong>New Project</strong> → delete the default code → paste the entire contents of <code>Code.gs</code></div></div>
+        <div class="sg-item"><div class="sg-num">3</div><div class="sg-text">Click <strong>Deploy → New Deployment</strong> → Type: <strong>Web App</strong> → Execute as: <strong>Me</strong> → Access: <strong>Anyone</strong> → Deploy</div></div>
+        <div class="sg-item"><div class="sg-num">4</div><div class="sg-text">Copy the <strong>Web App URL</strong> and paste it below</div></div>
       </div>
       <div style="height:16px"></div>
       <div class="mfld">
         <label>Google Apps Script Web App URL</label>
         <input type="url" id="cfgUrl" placeholder="https://script.google.com/macros/s/ABC.../exec">
       </div>
-      <div style="font-size:12px;color:var(--ink3);margin-top:4px">
-        Status: <span id="urlStatus"></span>
-      </div>
+      <div style="font-size:12px;color:var(--ink3);margin-top:4px">Status: <span id="urlStatus"></span></div>
     </div>
     <div class="mfoot">
       <button class="mcancel" onclick="closeSetup()">Cancel</button>
@@ -436,123 +376,71 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 </div>
 
 <script>
-// ── BAKED-IN ────────────────────────────────────────────
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWJc7DNVL2Q3WbcFJFzcyrmDsHuXxWbl_xB_EykOY8_UEpPpOB3uSj6Z7Sy2L3y6fGAA/exec';
-
-// ── CONFIG (localStorage) ────────────────────────────────
-let cfg = {};
-function loadCfg(){
-  try{ cfg = JSON.parse(localStorage.getItem('wr_cfg')||'{}'); }catch(e){ cfg={}; }
-}
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwWJc7DNVL2Q3WbcFJFzcyrmDsHuXxWbl_xB_EykOY8_UEpPpOB3uSj6Z7Sy2L3y6fGAA/exec';
+let cfg={};
+function loadCfg(){try{cfg=JSON.parse(localStorage.getItem('wr_cfg')||'{}');}catch(e){cfg={};}}
 function saveSetup(){
-  const url = document.getElementById('cfgUrl').value.trim();
-  if(!url){ showToast('Please enter the Apps Script URL','err'); return; }
-  cfg.scriptUrl = url;
-  localStorage.setItem('wr_cfg', JSON.stringify(cfg));
-  closeSetup();
-  updateBanners();
-  showToast('Connected! Ready to receive submissions.','ok');
+  const url=document.getElementById('cfgUrl').value.trim();
+  if(!url){showToast('Please enter the Apps Script URL','err');return;}
+  cfg.scriptUrl=url;localStorage.setItem('wr_cfg',JSON.stringify(cfg));
+  closeSetup();updateBanners();showToast('Connected! Ready to receive submissions.','ok');
 }
 function openSetup(){
   loadCfg();
-  document.getElementById('cfgUrl').value = cfg.scriptUrl||'';
-  const st = document.getElementById('urlStatus');
-  st.innerHTML = cfg.scriptUrl
-    ? '<span class="status-pill pill-ok">✓ Connected</span>'
-    : '<span class="status-pill pill-no">Not configured</span>';
+  document.getElementById('cfgUrl').value=cfg.scriptUrl||'';
+  const st=document.getElementById('urlStatus');
+  st.innerHTML=cfg.scriptUrl?'<span class="status-pill pill-ok">✓ Connected</span>':'<span class="status-pill pill-no">Not configured</span>';
   document.getElementById('setupModal').classList.add('show');
 }
-function closeSetup(){ document.getElementById('setupModal').classList.remove('show'); }
+function closeSetup(){document.getElementById('setupModal').classList.remove('show');}
+function updateBanners(){document.getElementById('setupBanner').classList.remove('show');document.getElementById('okBanner').classList.add('show');}
 
-function updateBanners(){
-  document.getElementById('setupBanner').classList.remove('show');
-  document.getElementById('okBanner').classList.add('show');
-}
-
-// ── FILE MANAGEMENT ──────────────────────────────────────
-let files = []; // [{id, file, ext, type}]
-let nextId = 0;
-
-const EXT_TYPE = {
-  pdf:'pdf',
-  jpg:'img',jpeg:'img',png:'img',gif:'img',bmp:'img',webp:'img',
-  docx:'word',doc:'word',txt:'text',rtf:'text',
-  ppt:'ppt',pptx:'ppt',xls:'sheet',xlsx:'sheet'
-};
-
-function getExt(name){ return (name.split('.').pop()||'').toLowerCase(); }
+let files=[],nextId=0;
+const EXT_TYPE={pdf:'pdf',jpg:'img',jpeg:'img',png:'img',gif:'img',bmp:'img',webp:'img',docx:'word',doc:'word',txt:'text',rtf:'text',ppt:'ppt',pptx:'ppt',xls:'sheet',xlsx:'sheet'};
+function getExt(name){return(name.split('.').pop()||'').toLowerCase();}
 
 function addFiles(newFiles){
   Array.from(newFiles).forEach(f=>{
-    const ext = getExt(f.name);
-    const type = EXT_TYPE[ext]||'other';
-    files.push({ id: nextId++, file:f, ext, type });
+    const ext=getExt(f.name),type=EXT_TYPE[ext]||'other';
+    files.push({id:nextId++,file:f,ext,type,docType:'',_objUrl:null});
   });
-  renderFileList();
-  updateProgress();
+  renderFileList();updateProgress();
 }
-
 function removeFile(id){
-  files = files.filter(f=>f.id!==id);
-  renderFileList();
-  updateProgress();
+  const f=files.find(x=>x.id===id);
+  if(f&&f._objUrl){URL.revokeObjectURL(f._objUrl);f._objUrl=null;}
+  files=files.filter(f=>f.id!==id);
+  renderFileList();updateProgress();
 }
 
-const DOC_TYPES = [
-  'BSc Certificate',
-  'HND Certificate',
-  'WAEC / NECO Certificate',
-  'BSc Transcript',
-  'HND Transcript',
-  'CV',
-  'WAEC / NECO Scratch Card',
-  'Passport Data Page',
-  'Affidavit',
-];
+const DOC_TYPES=['BSc Certificate','HND Certificate','WAEC / NECO Certificate','BSc Transcript','HND Transcript','CV','WAEC / NECO Scratch Card','Passport Data Page','Affidavit'];
 
-function setDocType(id, val){
-  const f = files.find(x=>x.id===id);
-  if(f){ f.docType = val; }
-  const sel = document.getElementById('dtype-'+id);
-  if(sel){ sel.className = val ? 'labelled' : 'unlabelled'; }
+function setDocType(id,val){
+  const f=files.find(x=>x.id===id);if(f)f.docType=val;
+  const sel=document.getElementById('dtype-'+id);
+  if(sel)sel.className=val?'labelled':'unlabelled';
   updateProgress();
 }
 
 function renderFileList(){
-  const list = document.getElementById('fileList');
-  const empty = document.getElementById('filesEmpty');
-  const countEl = document.getElementById('filesCount');
-  const countNum = document.getElementById('filesCountNum');
-  list.innerHTML = '';
-
-  if(files.length===0){
-    empty.style.display='block';
-    countEl.style.display='none';
-    return;
-  }
-  empty.style.display='none';
-  countEl.style.display='block';
-  countNum.textContent = files.length;
-
-  const typeOpts = DOC_TYPES.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
-
+  const list=document.getElementById('fileList');
+  const empty=document.getElementById('filesEmpty');
+  const countEl=document.getElementById('filesCount');
+  list.innerHTML='';
+  if(files.length===0){empty.style.display='block';countEl.style.display='none';return;}
+  empty.style.display='none';countEl.style.display='block';
+  document.getElementById('filesCountNum').textContent=files.length;
+  const typeOpts=DOC_TYPES.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
   files.forEach(f=>{
-    const isPDF = f.ext==='pdf';
-    let icClass='fic-oth', icLabel=f.ext.toUpperCase().slice(0,3)||'?';
+    const isPDF=f.ext==='pdf';
+    let icClass='fic-oth',icLabel=f.ext.toUpperCase().slice(0,3)||'?';
     if(isPDF){icClass='fic-pdf';icLabel='PDF';}
     else if(f.type==='img'){icClass='fic-img';icLabel=f.ext.toUpperCase().slice(0,3);}
     else if(f.type==='word'){icClass='fic-doc';icLabel='DOC';}
-
-    const chip = isPDF
-      ? '<span class="fi-chip chip-pass">✓ PDF — sent as-is</span>'
-      : '<span class="fi-chip chip-conv">↻ Will convert to PDF</span>';
-
-    const selVal = f.docType || '';
-    const selClass = selVal ? 'labelled' : 'unlabelled';
-
-    const div = document.createElement('div');
-    div.className='fitem';
-    div.id='fitem-'+f.id;
+    const chip=isPDF?'<span class="fi-chip chip-pass">✓ PDF — sent as-is</span>':'<span class="fi-chip chip-conv">↻ Will convert to PDF</span>';
+    const selClass=f.docType?'labelled':'unlabelled';
+    const div=document.createElement('div');
+    div.className='fitem';div.id='fitem-'+f.id;
     div.innerHTML=`
       <div style="display:flex;gap:12px;align-items:flex-start">
         <div class="fic ${icClass}">${icLabel}</div>
@@ -561,8 +449,8 @@ function renderFileList(){
           <div class="fi-meta">${fmtSize(f.file.size)} · ${f.ext.toUpperCase()}</div>
           ${chip}
           <div class="fi-dtype">
-            <select id="dtype-${f.id}" class="${selClass}" onchange="setDocType(${f.id}, this.value)">
-              <option value="" disabled ${selVal?'':'selected'}>— Select document type —</option>
+            <select id="dtype-${f.id}" class="${selClass}" onchange="setDocType(${f.id},this.value)">
+              <option value="" disabled ${f.docType?'':'selected'}>— Select document type —</option>
               ${typeOpts}
             </select>
           </div>
@@ -576,219 +464,171 @@ function renderFileList(){
         </button>
       </div>
       <div class="fi-preview-panel" id="preview-${f.id}"></div>`;
-    // restore selected value after render
-    if(selVal){
-      setTimeout(()=>{
-        const s=document.getElementById('dtype-'+f.id);
-        if(s) s.value=selVal;
-      },0);
-    }
+    if(f.docType){setTimeout(()=>{const s=document.getElementById('dtype-'+f.id);if(s)s.value=f.docType;},0);}
     list.appendChild(div);
   });
 }
 
-function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function fmtSize(b){ if(b<1024)return b+' B'; if(b<1048576)return (b/1024).toFixed(1)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtSize(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(1)+' MB';}
 
-// File input change
-document.getElementById('fileInput').addEventListener('change', function(){
-  addFiles(this.files);
-  this.value='';
-});
+document.getElementById('fileInput').addEventListener('change',function(){addFiles(this.files);this.value='';});
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');addFiles(e.dataTransfer.files);});
 
-// Drag & drop
-const dz = document.getElementById('dz');
-dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.classList.add('over'); });
-dz.addEventListener('dragleave', ()=> dz.classList.remove('over'));
-dz.addEventListener('drop', e=>{
-  e.preventDefault(); dz.classList.remove('over');
-  addFiles(e.dataTransfer.files);
-});
-
-// ── PROGRESS BAR ─────────────────────────────────────────
-['fName','fEmail','fPhone'].forEach(id=>{
-  document.getElementById(id).addEventListener('input', updateProgress);
-});
+['fName','fEmail','fPhone'].forEach(id=>document.getElementById(id).addEventListener('input',updateProgress));
 function updateProgress(){
-  const filled=['fName','fEmail','fPhone','fSchool','fProgram'].filter(id=>{
-    const el=document.getElementById(id); return el&&el.value.trim();
-  }).length;
+  const filled=['fName','fEmail','fPhone','fSchool','fProgram'].filter(id=>{const el=document.getElementById(id);return el&&el.value.trim();}).length;
   const hasFiles=files.length>0;
-  const allLabelled=files.length>0 && files.every(f=>f.docType);
+  const allLabelled=files.length>0&&files.every(f=>f.docType);
   const pct=(filled/5)*50+(hasFiles?25:0)+(allLabelled?25:0);
   const lit=Math.round((pct/100)*5);
-  for(let i=1;i<=5;i++) document.getElementById('ps'+i).classList.toggle('lit',i<=lit);
+  for(let i=1;i<=5;i++)document.getElementById('ps'+i).classList.toggle('lit',i<=lit);
   document.getElementById('trA').className='tstep '+(filled===5?'ok':filled>0?'on':'');
   document.getElementById('trB').className='tstep '+(allLabelled?'ok':hasFiles?'on':filled===5?'on':'');
   document.getElementById('trC').className='tstep '+(filled===5&&allLabelled?'on':'');
 }
 
+// ── PREVIEW — simple, reliable, no external deps ──────────
+async function togglePreview(id){
+  const panel=document.getElementById('preview-'+id);
+  const btn=document.getElementById('pbtn-'+id);
+  if(panel.classList.contains('show')){
+    panel.classList.remove('show');
+    btn.classList.remove('open');
+    btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg> Preview`;
+    return;
+  }
+  btn.classList.add('open');
+  btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg> Hide`;
+  panel.classList.add('show');
+  if(panel.dataset.loaded)return;
+  panel.dataset.loaded='1';
+  panel.innerHTML='<div class="pvw-loading">Loading preview…</div>';
+  const f=files.find(x=>x.id===id);
+  if(!f){panel.innerHTML='<div class="pvw-none">File not found.</div>';return;}
+  try{await buildPreview(f,panel);}
+  catch(err){panel.innerHTML='<div class="pvw-none">Preview failed: '+esc(err.message)+'</div>';}
+}
+
+async function buildPreview(f,panel){
+  const ext=f.ext;
+
+  // ── Images: direct object URL in <img> ──
+  if(['jpg','jpeg','png','gif','bmp','webp'].includes(ext)){
+    const url=f._objUrl||(f._objUrl=URL.createObjectURL(f.file));
+    panel.innerHTML=`<img class="pvw-img" src="${url}" alt="preview">`;
+    return;
+  }
+
+  // ── PDF: native browser <iframe> via object URL ──
+  if(ext==='pdf'){
+    const url=f._objUrl||(f._objUrl=URL.createObjectURL(f.file));
+    // Some browsers block iframe for blob PDFs — use embed as fallback
+    panel.innerHTML=`
+      <embed class="pvw-iframe" src="${url}#toolbar=0&navpanes=0" type="application/pdf">
+      <p style="display:none" id="pdf-fb-${f.id}"></p>`;
+    // Detect if embed failed (e.g. mobile) → show download link instead
+    setTimeout(()=>{
+      const embed=panel.querySelector('embed');
+      if(embed&&(embed.offsetHeight<20)){
+        panel.innerHTML=`<div class="pvw-none">
+          Your browser cannot preview PDFs inline.<br>
+          <a href="${url}" target="_blank" style="color:var(--gold);font-weight:600">Open PDF in new tab →</a>
+        </div>`;
+      }
+    },900);
+    return;
+  }
+
+  // ── DOCX: mammoth → rich HTML ──
+  if(ext==='docx'){
+    const ab=await f.file.arrayBuffer();
+    const result=await mammoth.convertToHtml({arrayBuffer:ab});
+    const html=result.value||'<p><em>(empty document)</em></p>';
+    panel.innerHTML=`<div class="pvw-html">${html}</div>`;
+    return;
+  }
+
+  // ── Plain text / RTF / DOC ──
+  if(['txt','rtf','doc'].includes(ext)){
+    const text=await f.file.text();
+    const snippet=(text.trim()||'(empty file)').slice(0,1200);
+    const more=text.length>1200?'\n… (truncated)':'';
+    panel.innerHTML=`<div class="pvw-text">${esc(snippet+more)}</div>`;
+    return;
+  }
+
+  // ── Everything else ──
+  panel.innerHTML=`<div class="pvw-none">Preview is not available for .${ext} files — the document will still submit correctly.</div>`;
+}
+
 // ── PDF CONVERSION ────────────────────────────────────────
 async function toPDFBase64(f){
-  const ext=f.ext, file=f.file;
+  const ext=f.ext,file=f.file;
   const {jsPDF}=window.jspdf;
-  if(ext==='pdf') return readBase64(file);
-  if(['jpg','jpeg','png','gif','bmp','webp'].includes(ext)) return imgToPDF(file,jsPDF,ext);
-  if(ext==='docx') return docxToPDF(file,jsPDF);
+  if(ext==='pdf')return readBase64(file);
+  if(['jpg','jpeg','png','gif','bmp','webp'].includes(ext))return imgToPDF(file,jsPDF,ext);
+  if(ext==='docx')return docxToPDF(file,jsPDF);
   return textToPDF(file,jsPDF);
 }
+function readBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});}
+function imgToPDF(file,jsPDF,ext){return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const W=img.width,H=img.height;const doc=new jsPDF({orientation:W>H?'landscape':'portrait',unit:'px',format:[W,H]});doc.addImage(e.target.result,['jpg','jpeg'].includes(ext)?'JPEG':'PNG',0,0,W,H);res(doc.output('datauristring').split(',')[1]);};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
+function docxToPDF(file,jsPDF){return new Promise((res,rej)=>{const r=new FileReader();r.onload=async e=>{try{const result=await mammoth.extractRawText({arrayBuffer:e.target.result});res(await textBodyToPDF(result.value,jsPDF));}catch(err){rej(err);}};r.onerror=rej;r.readAsArrayBuffer(file);});}
+function textToPDF(file,jsPDF){return new Promise((res,rej)=>{const r=new FileReader();r.onload=async e=>{try{res(await textBodyToPDF(e.target.result,jsPDF));}catch(err){rej(err);}};r.onerror=rej;r.readAsText(file);});}
+async function textBodyToPDF(text,jsPDF){const doc=new jsPDF({unit:'pt',format:'a4'});const margin=60,lh=16,pH=doc.internal.pageSize.getHeight(),pW=doc.internal.pageSize.getWidth();doc.setFontSize(11);doc.setFont('helvetica','normal');const lines=doc.splitTextToSize(text||'(empty document)',pW-margin*2);let y=margin;lines.forEach(l=>{if(y+lh>pH-margin){doc.addPage();y=margin;}doc.text(l,margin,y);y+=lh;});return doc.output('datauristring').split(',')[1];}
 
-function readBase64(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=e=>res(e.target.result.split(',')[1]);
-    r.onerror=rej;
-    r.readAsDataURL(file);
-  });
-}
+function setProc(n,state){const li=document.getElementById('pl'+n),ind=document.getElementById('pi'+n);li.className=state;if(state==='ok')ind.innerHTML='✓';else if(state==='err')ind.innerHTML='✗';else if(state==='on')ind.innerHTML='<div class="spin"></div>';else ind.textContent=n;}
 
-function imgToPDF(file,jsPDF,ext){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=e=>{
-      const img=new Image();
-      img.onload=()=>{
-        const W=img.width,H=img.height;
-        const doc=new jsPDF({orientation:W>H?'landscape':'portrait',unit:'px',format:[W,H]});
-        doc.addImage(e.target.result,['jpg','jpeg'].includes(ext)?'JPEG':'PNG',0,0,W,H);
-        res(doc.output('datauristring').split(',')[1]);
-      };
-      img.onerror=rej; img.src=e.target.result;
-    };
-    r.onerror=rej; r.readAsDataURL(file);
-  });
-}
-
-function docxToPDF(file,jsPDF){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=async e=>{
-      try{
-        const result=await mammoth.extractRawText({arrayBuffer:e.target.result});
-        res(await textBodyToPDF(result.value,jsPDF));
-      }catch(err){rej(err);}
-    };
-    r.onerror=rej; r.readAsArrayBuffer(file);
-  });
-}
-
-function textToPDF(file,jsPDF){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=async e=>{
-      try{res(await textBodyToPDF(e.target.result,jsPDF));}catch(err){rej(err);}
-    };
-    r.onerror=rej; r.readAsText(file);
-  });
-}
-
-async function textBodyToPDF(text,jsPDF){
-  const doc=new jsPDF({unit:'pt',format:'a4'});
-  const margin=60,lh=16,pH=doc.internal.pageSize.getHeight(),pW=doc.internal.pageSize.getWidth();
-  doc.setFontSize(11); doc.setFont('helvetica','normal');
-  const lines=doc.splitTextToSize(text||'(empty document)',pW-margin*2);
-  let y=margin;
-  lines.forEach(l=>{ if(y+lh>pH-margin){doc.addPage();y=margin;} doc.text(l,margin,y); y+=lh; });
-  return doc.output('datauristring').split(',')[1];
-}
-
-// ── PROCESSING UI ─────────────────────────────────────────
-function setProc(n,state){
-  const li=document.getElementById('pl'+n), ind=document.getElementById('pi'+n);
-  li.className=state;
-  if(state==='ok') ind.innerHTML='✓';
-  else if(state==='err') ind.innerHTML='✗';
-  else if(state==='on') ind.innerHTML='<div class="spin"></div>';
-  else ind.textContent=n;
-}
-
-// ── SUBMIT ────────────────────────────────────────────────
 async function handleSubmit(e){
   e.preventDefault();
   if(files.length===0){showToast('Please upload at least one document.','err');return;}
   const unlabelled=files.filter(f=>!f.docType);
   if(unlabelled.length>0){
     showToast(`Please select a document type for all ${files.length} file(s).`,'err');
-    unlabelled.forEach(f=>{
-      const s=document.getElementById('dtype-'+f.id);
-      if(s){s.classList.add('unlabelled');s.closest('.fitem').style.borderColor='var(--amber-border)';}
-    });
+    unlabelled.forEach(f=>{const s=document.getElementById('dtype-'+f.id);if(s){s.classList.add('unlabelled');s.closest('.fitem').style.borderColor='var(--amber-border)';}});
     return;
   }
-  cfg.scriptUrl = SCRIPT_URL;
-
+  cfg.scriptUrl=SCRIPT_URL;
   const schoolEl=document.getElementById('fSchool');
   const schoolName=schoolEl.options[schoolEl.selectedIndex]?.text||'';
-  const params={
-    name:   document.getElementById('fName').value.trim(),
-    email:  document.getElementById('fEmail').value.trim(),
-    phone:  document.getElementById('fPhone').value.trim(),
-    school: schoolName,
-    program:document.getElementById('fProgram').value,
-  };
-
+  const params={name:document.getElementById('fName').value.trim(),email:document.getElementById('fEmail').value.trim(),phone:document.getElementById('fPhone').value.trim(),school:schoolName,program:document.getElementById('fProgram').value};
   document.getElementById('overlay').classList.add('show');
   document.getElementById('sbtn').disabled=true;
-  setProc(1,''); setProc(2,''); setProc(3,'');
-
-  // Step 1: Convert all files
+  setProc(1,'');setProc(2,'');setProc(3,'');
   let converted=[];
   try{
     setProc(1,'on');
     for(const f of files){
       const b64=await toPDFBase64(f);
-      const studentFirst = params.name.trim().replace(/[^a-zA-Z0-9 ]/g,'').trim();
-      const docLabel = f.docType || f.file.name.replace(/\.[^.]+$/,'');
-      const safeName = `${studentFirst} - ${docLabel}.pdf`;
-      converted.push({name:safeName, base64:b64});
+      const studentFirst=params.name.trim().replace(/[^a-zA-Z0-9 ]/g,'').trim();
+      const docLabel=f.docType||f.file.name.replace(/\.[^.]+$/,'');
+      const safeName=`${studentFirst} - ${docLabel}.pdf`;
+      converted.push({name:safeName,base64:b64});
     }
     setProc(1,'ok');
-  }catch(err){
-    setProc(1,'err');
-    document.getElementById('overlay').classList.remove('show');
-    document.getElementById('sbtn').disabled=false;
-    showToast('Conversion failed: '+err.message,'err');
-    return;
-  }
-
-  // Steps 2+3: Send to Apps Script (Drive + Email combined)
+  }catch(err){setProc(1,'err');document.getElementById('overlay').classList.remove('show');document.getElementById('sbtn').disabled=false;showToast('Conversion failed: '+err.message,'err');return;}
   setProc(2,'on');
   let folderUrl='';
   try{
     await delay(200);
-    const payload={...params, files:converted};
-    const fd=new FormData();
-    fd.append('data', JSON.stringify(payload));
-    // Try with CORS first, fallback to no-cors
+    const payload={...params,files:converted};
+    const fd=new FormData();fd.append('data',JSON.stringify(payload));
     let res;
-    try{
-      res=await fetch(cfg.scriptUrl,{method:'POST',body:fd});
-      const json=await res.json();
-      if(json.folder) folderUrl=json.folder;
-    }catch(corsErr){
-      // CORS blocked — send no-cors (fire and forget, assume success)
-      await fetch(cfg.scriptUrl,{method:'POST',mode:'no-cors',body:fd});
-    }
-    setProc(2,'ok');
-    setProc(3,'ok');
-  }catch(err){
-    setProc(2,'err');
-    setProc(3,'err');
-    document.getElementById('overlay').classList.remove('show');
-    document.getElementById('sbtn').disabled=false;
-    showToast('Submission failed: '+err.message,'err');
-    return;
-  }
-
+    try{res=await fetch(cfg.scriptUrl,{method:'POST',body:fd});const json=await res.json();if(json.folder)folderUrl=json.folder;}
+    catch(corsErr){await fetch(cfg.scriptUrl,{method:'POST',mode:'no-cors',body:fd});}
+    setProc(2,'ok');setProc(3,'ok');
+  }catch(err){setProc(2,'err');setProc(3,'err');document.getElementById('overlay').classList.remove('show');document.getElementById('sbtn').disabled=false;showToast('Submission failed: '+err.message,'err');return;}
   await delay(600);
   document.getElementById('overlay').classList.remove('show');
-  showSuccess(params, converted.length, folderUrl);
+  showSuccess(params,converted.length,folderUrl);
 }
-
 function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 
-function showSuccess(params, count, folderUrl){
-  for(let i=1;i<=5;i++) document.getElementById('ps'+i).classList.add('lit');
+function showSuccess(params,count,folderUrl){
+  for(let i=1;i<=5;i++)document.getElementById('ps'+i).classList.add('lit');
   document.getElementById('formView').style.display='none';
   document.getElementById('smeta').innerHTML=`
     <div><span class="sl">Name</span><span class="sv">${esc(params.name)}</span></div>
@@ -797,246 +637,55 @@ function showSuccess(params, count, folderUrl){
     <div><span class="sl">Programme</span><span class="sv">${esc(params.program)}</span></div>
     <div><span class="sl">Documents</span><span class="sv">${count} file(s) submitted</span></div>
     <div><span class="sl">Sent to</span><span class="sv">applications.whiterock@gmail.com</span></div>`;
-  if(folderUrl){
-    const lnk=document.getElementById('driveFolderLink');
-    lnk.href=folderUrl; lnk.style.display='inline-flex';
-  }
+  if(folderUrl){const lnk=document.getElementById('driveFolderLink');lnk.href=folderUrl;lnk.style.display='inline-flex';}
   document.getElementById('successView').classList.add('show');
 }
-
 function resetForm(){
   document.getElementById('theForm').reset();
   document.getElementById('programWrap').style.display='none';
-  files=[]; renderFileList(); updateProgress();
+  files.forEach(f=>{if(f._objUrl){URL.revokeObjectURL(f._objUrl);}});
+  files=[];renderFileList();updateProgress();
   document.getElementById('successView').classList.remove('show');
   document.getElementById('driveFolderLink').style.display='none';
   document.getElementById('formView').style.display='';
   document.getElementById('sbtn').disabled=false;
-  for(let i=1;i<=5;i++) document.getElementById('ps'+i).classList.remove('lit');
+  for(let i=1;i<=5;i++)document.getElementById('ps'+i).classList.remove('lit');
   document.getElementById('trA').className='tstep on';
   document.getElementById('trB').className='tstep';
   document.getElementById('trC').className='tstep';
 }
 
-// ── TOAST ─────────────────────────────────────────────────
-function showToast(msg,type=''){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast show'+(type?' '+type:'');
-  setTimeout(()=>{t.className='toast';},3500);
-}
+function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');setTimeout(()=>{t.className='toast';},3500);}
 
-
-// ── SCHOOL → PROGRAMME DATA ───────────────────────────────
-const PROGRAMMES = {
-  rcl: [
-    { group: 'Business — AY 2025/2026', items: [
-      'BSc (Hons) Business Management',
-      'BSc (Hons) Business Management Top-up',
-      'Master of Business Administration (MBA)',
-      'MSc International Management',
-    ]},
-    { group: 'Health, Sport & Social Science — AY 2025/2026', items: [
-      'MSc Social Care, Health and Wellbeing',
-      'MSc Psychology',
-    ]},
-    { group: 'Engineering & Computing — AY 2025/2026', items: [
-      'MSc Software Engineering',
-    ]},
+const PROGRAMMES={
+  rcl:[
+    {group:'Business — AY 2025/2026',items:['BSc (Hons) Business Management','BSc (Hons) Business Management Top-up','Master of Business Administration (MBA)','MSc International Management']},
+    {group:'Health, Sport & Social Science — AY 2025/2026',items:['MSc Social Care, Health and Wellbeing','MSc Psychology']},
+    {group:'Engineering & Computing — AY 2025/2026',items:['MSc Software Engineering']},
   ],
-  cccu: [
-    { group: 'Canterbury Christ Church University', items: [
-      'MBA International',
-      'MSc International Business',
-      'MA Early Childhood Education',
-      'MSc Applied Exercise and Health Science',
-      'MSc Psychology',
-      'LL.M. International Business and Law',
-      'MA Modern History',
-      'MEng Chemical Engineering',
-      'MA Teaching English to Speakers of Other Languages (TESOL)',
-      'MMus Master of Music',
-      'MA Education',
-      'MSc Forensic and Investigative Psychology',
-      'MSc Event and Tourism Management',
-      'MSc Data Intelligence',
-      'MA Games Design',
-      'MSc Advanced Manufacturing Systems and Technology',
-      'MA Applied Linguistics',
-      'MA Media, Communications and PR',
-      'MSc Strength, Conditioning and Performance Science',
-      'MA Film and Media Production',
-      'MSc Speech and Language Therapy',
-      'MSc Criminology and Criminal Psychology',
-      'MSc Applied Clinical Psychology',
-      'MSc Cybersecurity Technology',
-      'MSc International Hospitality Management',
-      'MSc Policing & Security Transformation',
-      'PGCE Secondary (QTS)',
-      'MA Heritage',
-      'MSc Nursing Adult',
-      'MSc Nursing Child',
-      'MSc Mental Health Nursing',
-      'MSc International Tourism & Hospitality Management',
-      'MSc International Events Management',
-      'MSc Global Public Health',
-    ]},
+  cccu:[{group:'Canterbury Christ Church University',items:['MBA International','MSc International Business','MA Early Childhood Education','MSc Applied Exercise and Health Science','MSc Psychology','LL.M. International Business and Law','MA Modern History','MEng Chemical Engineering','MA Teaching English to Speakers of Other Languages (TESOL)','MMus Master of Music','MA Education','MSc Forensic and Investigative Psychology','MSc Event and Tourism Management','MSc Data Intelligence','MA Games Design','MSc Advanced Manufacturing Systems and Technology','MA Applied Linguistics','MA Media, Communications and PR','MSc Strength, Conditioning and Performance Science','MA Film and Media Production','MSc Speech and Language Therapy','MSc Criminology and Criminal Psychology','MSc Applied Clinical Psychology','MSc Cybersecurity Technology','MSc International Hospitality Management','MSc Policing & Security Transformation','PGCE Secondary (QTS)','MA Heritage','MSc Nursing Adult','MSc Nursing Child','MSc Mental Health Nursing','MSc International Tourism & Hospitality Management','MSc International Events Management','MSc Global Public Health']}],
+  ysj:[
+    {group:'York St John — York Campus',items:['Masters Business Administration (York)','MBA with Professional Experience (York)','MSc Human Resource Management','MSc Human Resource Management with a Year in Industry','MSc International Business','MSc International Business with a Year in Industry','MSc Project Management','MSc Project Management with Professional Experience','Masters Business Administration Healthcare Management','Masters Business Administration Healthcare Management with Year in Industry','MSc Strategic Digital Marketing','MSc Strategic Digital Marketing with Professional Experience','MSc Marketing','MSc Marketing with a Year in Industry']},
+    {group:'York St John — London Campus',items:['Masters Business Administration (London)','MBA with Professional Experience (London)','MSc Computer Science','MSc Computer Science with Year in Industry','MSc International Project Management','MSc International Project Management with Professional Experience','MSc Digital Marketing','MSc Digital Marketing with Professional Experience','MSc Data Science','MSc Data Science with Professional Experience','MSc Global Healthcare Management','MSc Global Healthcare Management with Professional Experience','MSc Public Health','MSc Public Health with Professional Experience','MRes Management Studies','BA (Hons) Global Business Management (Level 6 Direct Entry)','BSc (Hons) Computing for Industry (Level 6 entry)','BA (Hons) Business and Computing (Level 6 entry)','MSc Hospitality Management and Tourism']},
   ],
-  ysj: [
-    { group: 'York St John — York Campus', items: [
-      'Masters Business Administration (York)',
-      'MBA with Professional Experience (York)',
-      'MSc Human Resource Management',
-      'MSc Human Resource Management with a Year in Industry',
-      'MSc International Business',
-      'MSc International Business with a Year in Industry',
-      'MSc Project Management',
-      'MSc Project Management with Professional Experience',
-      'Masters Business Administration Healthcare Management',
-      'Masters Business Administration Healthcare Management with Year in Industry',
-      'MSc Strategic Digital Marketing',
-      'MSc Strategic Digital Marketing with Professional Experience',
-      'MSc Marketing',
-      'MSc Marketing with a Year in Industry',
-    ]},
-    { group: 'York St John — London Campus', items: [
-      'Masters Business Administration (London)',
-      'MBA with Professional Experience (London)',
-      'MSc Computer Science',
-      'MSc Computer Science with Year in Industry',
-      'MSc International Project Management',
-      'MSc International Project Management with Professional Experience',
-      'MSc Digital Marketing',
-      'MSc Digital Marketing with Professional Experience',
-      'MSc Data Science',
-      'MSc Data Science with Professional Experience',
-      'MSc Global Healthcare Management',
-      'MSc Global Healthcare Management with Professional Experience',
-      'MSc Public Health',
-      'MSc Public Health with Professional Experience',
-      'MRes Management Studies',
-      'BA (Hons) Global Business Management (Level 6 Direct Entry)',
-      'BSc (Hons) Computing for Industry (Level 6 entry)',
-      'BA (Hons) Business and Computing (Level 6 entry)',
-      'MSc Hospitality Management and Tourism',
-    ]},
-  ],
-  bpp: [
-    { group: 'BPP University', items: [
-      'Accountancy and Tax',
-      'Law',
-      'Leadership and Management',
-      'Human Resources',
-      'Data and Analytics',
-      'Artificial Intelligence (AI)',
-      'Finance',
-      'Digital Marketing',
-      'Nursing and Healthcare',
-    ]},
-  ],
+  bpp:[{group:'BPP University',items:['Accountancy and Tax','Law','Leadership and Management','Human Resources','Data and Analytics','Artificial Intelligence (AI)','Finance','Digital Marketing','Nursing and Healthcare']}],
 };
 
 function onSchoolChange(){
-  const school = document.getElementById('fSchool').value;
-  const wrap = document.getElementById('programWrap');
-  const sel = document.getElementById('fProgram');
-  sel.innerHTML = '<option value="" disabled selected>Select your programme...</option>';
-  if(!school){ wrap.style.display='none'; return; }
-  const groups = PROGRAMMES[school] || [];
-  groups.forEach(g=>{
-    const og = document.createElement('optgroup');
-    og.label = g.group;
-    g.items.forEach(item=>{ const o=document.createElement('option'); o.textContent=item; og.appendChild(o); });
-    sel.appendChild(og);
-  });
-  wrap.style.display='';
-  sel.removeAttribute('disabled');
-  sel.addEventListener('change', updateProgress);
-  updateProgress();
+  const school=document.getElementById('fSchool').value;
+  const wrap=document.getElementById('programWrap');
+  const sel=document.getElementById('fProgram');
+  sel.innerHTML='<option value="" disabled selected>Select your programme...</option>';
+  if(!school){wrap.style.display='none';return;}
+  const groups=PROGRAMMES[school]||[];
+  groups.forEach(g=>{const og=document.createElement('optgroup');og.label=g.group;g.items.forEach(item=>{const o=document.createElement('option');o.textContent=item;og.appendChild(o);});sel.appendChild(og);});
+  wrap.style.display='';sel.removeAttribute('disabled');
+  sel.addEventListener('change',updateProgress);updateProgress();
 }
 
-// ── PREVIEW ───────────────────────────────────────────────
-async function togglePreview(id){
-  const panel = document.getElementById('preview-'+id);
-  const btn   = document.getElementById('pbtn-'+id);
-  if(panel.classList.contains('show')){
-    panel.classList.remove('show');
-    btn.classList.remove('open');
-    btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg> Preview`;
-    return;
-  }
-  panel.classList.add('show');
-  btn.classList.add('open');
-  btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg> Hide`;
-  if(panel.dataset.loaded) return;
-  panel.dataset.loaded='1';
-  panel.innerHTML='<div class="fi-preview-loading">Generating preview...</div>';
-  const f = files.find(x=>x.id===id);
-  if(!f){ panel.innerHTML='<div class="fi-preview-unsupported">File not found.</div>'; return; }
-  try{ await generatePreview(f, panel); }
-  catch(err){ panel.innerHTML='<div class="fi-preview-unsupported">Could not generate preview.</div>'; }
-}
-
-async function generatePreview(f, panel){
-  const ext = f.ext;
-
-  if(['jpg','jpeg','png','gif','bmp','webp'].includes(ext)){
-    const url = URL.createObjectURL(f.file);
-    const img = document.createElement('img');
-    img.src = url;
-    img.alt = 'preview';
-    img.style.cssText = 'display:block;width:100%;max-height:320px;object-fit:contain;background:#fff';
-    img.onerror = function(){ panel.innerHTML='<div class="fi-preview-unsupported">Could not load image.</div>'; };
-    panel.innerHTML = '';
-    panel.appendChild(img);
-    return;
-  }
-
-  if(ext==='pdf'){
-    const rawAb = await f.file.arrayBuffer();
-    const ab = new Uint8Array(rawAb);
-    if(typeof pdfjsLib === 'undefined'){
-      panel.innerHTML='<div class="fi-preview-unsupported">PDF preview unavailable.</div>';
-      return;
-    }
-    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const pdf = await pdfjsLib.getDocument({data:ab,verbosity:0}).promise;
-    const page = await pdf.getPage(1);
-    const vp = page.getViewport({scale:1.5});
-    const canvas = document.createElement('canvas');
-    canvas.width = vp.width;
-    canvas.height = vp.height;
-    canvas.style.cssText = 'display:block;width:100%;height:auto';
-    await page.render({canvasContext:canvas.getContext('2d'), viewport:vp}).promise;
-    panel.innerHTML = '';
-    panel.appendChild(canvas);
-    return;
-  }
-
-  if(ext==='docx'){
-    const ab = await f.file.arrayBuffer();
-    const result = await mammoth.extractRawText({arrayBuffer:ab});
-    const snippet = result.value.slice(0,800).trim() || '(empty document)';
-    const more = result.value.length > 800 ? '\n...' : '';
-    panel.innerHTML = '<div class="fi-preview-text">' + esc(snippet) + more + '</div>';
-    return;
-  }
-
-  if(['txt','rtf','doc'].includes(ext)){
-    const text = await f.file.text();
-    const snippet = text.slice(0,800).trim() || '(empty file)';
-    const more = text.length > 800 ? '\n...' : '';
-    panel.innerHTML = '<div class="fi-preview-text">' + esc(snippet) + more + '</div>';
-    return;
-  }
-
-  panel.innerHTML = '<div class="fi-preview-unsupported">Preview not available for .' + ext + ' files — document will still be submitted correctly.</div>';
-}
-
-// ── INIT ──────────────────────────────────────────────────
 loadCfg();
-if(!cfg.scriptUrl){ cfg.scriptUrl = SCRIPT_URL; localStorage.setItem('wr_cfg', JSON.stringify(cfg)); }
-updateBanners();
-renderFileList();
+if(!cfg.scriptUrl){cfg.scriptUrl=SCRIPT_URL;localStorage.setItem('wr_cfg',JSON.stringify(cfg));}
+updateBanners();renderFileList();
 </script>
 </body>
 </html>
