@@ -224,19 +224,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
           <div class="grid">
             <div class="fld full">
               <label>Full Name <sup>*</sup></label>
-              <input type="text" id="fName" placeholder="e.g. Adaeze Okonkwo" required autocomplete="name">
+              <input type="text" id="fName" name="name" placeholder="e.g. Adaeze Okonkwo" required autocomplete="name">
             </div>
             <div class="fld">
               <label>Email Address <sup>*</sup></label>
-              <input type="email" id="fEmail" placeholder="yourname@email.com" required autocomplete="email">
+              <input type="email" id="fEmail" name="email" placeholder="yourname@email.com" required autocomplete="email">
             </div>
             <div class="fld">
               <label>Phone Number <sup>*</sup></label>
-              <input type="tel" id="fPhone" placeholder="+234 800 000 0000" required autocomplete="tel">
+              <input type="tel" id="fPhone" name="phone" placeholder="+234 800 000 0000" required autocomplete="tel">
             </div>
             <div class="fld full">
               <label>School / University <sup>*</sup></label>
-              <select id="fSchool" required onchange="onSchoolChange()">
+              <select id="fSchool" name="school" required onchange="onSchoolChange(this)">
                 <option value="" disabled selected>Select a school...</option>
                 <option value="rcl">Regent College London (RCL)</option>
                 <option value="cccu">Canterbury Christ Church University (CCCU)</option>
@@ -246,7 +246,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
             </div>
             <div class="fld full" id="programWrap" style="display:none">
               <label>Programme Intending to Apply For <sup>*</sup></label>
-              <select id="fProgram">
+              <select id="fProgram" name="program" required>
                 <option value="" disabled selected>Select your programme...</option>
               </select>
             </div>
@@ -565,7 +565,49 @@ function setProc(n,state){
 // ── SUBMIT ────────────────────────────────────────────────
 async function handleSubmit(e){
   e.preventDefault();
-  if(files.length===0){showToast('Please upload at least one document.','err');return;}
+  
+  // CRITICAL FIX: Get fresh values directly from form elements
+  const form = document.getElementById('theForm');
+  const formData = new FormData(form);
+  
+  // Debug: Log what we're getting
+  console.log('Form Data:');
+  for (let [key, value] of formData.entries()) {
+    console.log(key + ': ' + value);
+  }
+  
+  // Get values directly from inputs to ensure they're current
+  const nameVal = document.getElementById('fName').value.trim();
+  const emailVal = document.getElementById('fEmail').value.trim();
+  const phoneVal = document.getElementById('fPhone').value.trim();
+  
+  // CRITICAL FIX: Get school properly
+  const schoolEl = document.getElementById('fSchool');
+  const schoolIndex = schoolEl.selectedIndex;
+  const schoolValue = schoolEl.value;
+  const schoolName = schoolIndex > 0 ? schoolEl.options[schoolIndex].text : '';
+  
+  console.log('School Debug:', { index: schoolIndex, value: schoolValue, name: schoolName });
+  
+  // CRITICAL FIX: Get program properly  
+  const programEl = document.getElementById('fProgram');
+  const programIndex = programEl.selectedIndex;
+  const programValue = programEl.value;
+  const programName = programIndex > 0 ? programEl.options[programIndex].text : '';
+  
+  console.log('Program Debug:', { index: programIndex, value: programValue, name: programName });
+
+  // Validation
+  if(!nameVal || !emailVal || !phoneVal || !schoolValue || !programValue){
+    showToast('Please fill in all required fields.', 'err');
+    return;
+  }
+  
+  if(files.length===0){
+    showToast('Please upload at least one document.','err');
+    return;
+  }
+  
   const unlabelled=files.filter(f=>!f.docType);
   if(unlabelled.length>0){
     showToast(`Please select a document type for all ${files.length} file(s).`,'err');
@@ -576,15 +618,17 @@ async function handleSubmit(e){
     return;
   }
 
-  const schoolEl=document.getElementById('fSchool');
-  const schoolName=schoolEl.options[schoolEl.selectedIndex]?.text||'';
   const params={
-    name:   document.getElementById('fName').value.trim(),
-    email:  document.getElementById('fEmail').value.trim(),
-    phone:  document.getElementById('fPhone').value.trim(),
+    name: nameVal,
+    email: emailVal,
+    phone: phoneVal,
     school: schoolName,
-    program:document.getElementById('fProgram').value,
+    schoolCode: schoolValue,
+    program: programName,
+    programCode: programValue,
   };
+
+  console.log('Submitting params:', params);
 
   document.getElementById('overlay').classList.add('show');
   document.getElementById('sbtn').disabled=true;
@@ -596,7 +640,7 @@ async function handleSubmit(e){
     setProc(1,'on');
     for(const f of files){
       const b64=await toPDFBase64(f);
-      const studentFirst = params.name.trim().replace(/[^a-zA-Z0-9 ]/g,'').trim();
+      const studentFirst = params.name.replace(/[^a-zA-Z0-9 ]/g,'').trim();
       const docLabel = f.docType || f.file.name.replace(/\.[^.]+$/,'');
       const safeName = `${studentFirst} - ${docLabel}.pdf`;
       converted.push({name:safeName, base64:b64});
@@ -650,6 +694,7 @@ function showSuccess(params, count, folderUrl){
   document.getElementById('smeta').innerHTML=`
     <div><span class="sl">Name</span><span class="sv">${esc(params.name)}</span></div>
     <div><span class="sl">Email</span><span class="sv">${esc(params.email)}</span></div>
+    <div><span class="sl">Phone</span><span class="sv">${esc(params.phone)}</span></div>
     <div><span class="sl">School</span><span class="sv">${esc(params.school)}</span></div>
     <div><span class="sl">Programme</span><span class="sv">${esc(params.program)}</span></div>
     <div><span class="sl">Documents</span><span class="sv">${count} file(s) submitted</span></div>
@@ -791,22 +836,42 @@ const PROGRAMMES = {
   ],
 };
 
-function onSchoolChange(){
-  const school = document.getElementById('fSchool').value;
+function onSchoolChange(schoolEl){
+  // FIX: Pass the element directly to ensure we have the right reference
+  const school = schoolEl ? schoolEl.value : document.getElementById('fSchool').value;
   const wrap = document.getElementById('programWrap');
   const sel = document.getElementById('fProgram');
+  
+  // Clear existing options
   sel.innerHTML = '<option value="" disabled selected>Select your programme...</option>';
-  if(!school){ wrap.style.display='none'; return; }
+  
+  if(!school){ 
+    wrap.style.display='none'; 
+    return; 
+  }
+  
   const groups = PROGRAMMES[school] || [];
   groups.forEach(g=>{
     const og = document.createElement('optgroup');
     og.label = g.group;
-    g.items.forEach(item=>{ const o=document.createElement('option'); o.textContent=item; og.appendChild(o); });
+    g.items.forEach(item=>{ 
+      const o=document.createElement('option'); 
+      o.value = item; // FIX: Set explicit value
+      o.textContent=item; 
+      og.appendChild(o); 
+    });
     sel.appendChild(og);
   });
+  
   wrap.style.display='';
   sel.removeAttribute('disabled');
-  sel.addEventListener('change', updateProgress);
+  
+  // FIX: Add change listener only once
+  sel.onchange = function() {
+    updateProgress();
+    console.log('Program selected:', this.value, 'Index:', this.selectedIndex);
+  };
+  
   updateProgress();
 }
 
