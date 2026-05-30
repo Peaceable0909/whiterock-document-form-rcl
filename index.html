@@ -501,14 +501,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 const MY_WA = '2349074561545';
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAknHtoZDSZISm_T_fAkJS0D1thAByxgpgX3FgCk3ZbLr3nNHEYBDR1GMlRKcynsNWaQ/exec';
 
-// ── SMARTX CRM CONFIG ────────────────────────────────────
-// These values come from your QR link URL parameters
-const CRM_USER_ID   = '69c50b78ef3cf82355e42e1a';
-const CRM_USER_NAME = 'Peaceable Olaniyi';
-const CRM_USER_TYPE = 'user';
-const CRM_BRANCH_ID = '';
-const CRM_BASE_URL  = 'https://wr.smartxcrm.com/publicleadform';
-
 // ── CONFIG (localStorage) ────────────────────────────────
 let cfg = {};
 function loadCfg(){
@@ -799,52 +791,6 @@ async function sendWA(params, fileCount){
   if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'WA error');}
 }
 
-// ── SMARTX CRM PUSH ───────────────────────────────────────
-// Fires a background POST to your SmartX CRM public lead form.
-// Uses no-cors so the browser doesn't block it cross-origin.
-// The lead will appear under your account (userId) in the CRM.
-async function sendToCRM(params){
-  const docList = files.map(f => f.docType || f.file.name).join(', ');
-
-  // SmartX CRM expects the routing params in the URL query string,
-  // and the lead data as POST body fields — matching exactly how
-  // the browser submits the native CRM form.
-  const urlParams = new URLSearchParams({
-    from:     'qr',
-    userName: CRM_USER_NAME,
-    userType: CRM_USER_TYPE,
-    userId:   CRM_USER_ID,
-    branchId: CRM_BRANCH_ID,
-    lead_form:'qrcode',
-  });
-
-  const formData = new URLSearchParams({
-    name:                params.name,
-    email:               params.email,
-    phone:               params.phone,
-    city:                params.city        || '',
-    gender:              params.gender      || '',
-    dateofbirth:         params.dob         || '',
-    age:                 params.age         || '',
-    country:             'Nigeria',
-    lead_form:           'Web Enquiry',
-    source_of_reference: 'Peaceable Olaniyi',
-    inquiry_for:         'Student Application',
-    remarks:             `School: ${params.school} | Programme: ${params.program} | Docs: ${docList}`,
-  });
-
-  const fullUrl = CRM_BASE_URL + '?' + urlParams.toString();
-
-  try {
-    await fetch(fullUrl, {
-      method:  'POST',
-      mode:    'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body:    formData.toString(),
-    });
-  } catch(err){
-    console.warn('CRM push failed silently:', err.message);
-  }
 }
 
 // ── SUBMIT ────────────────────────────────────────────────
@@ -938,15 +884,8 @@ async function handleSubmit(e){
     console.warn('WhatsApp skipped:', err.message);
   }
 
-  // Step 5: CRM push (non-fatal, fire & forget)
-  setProc(5,'on');
-  try{
-    await sendToCRM(params);
-    setProc(5,'ok');
-  }catch(err){
-    setProc(5,'err');
-    console.warn('CRM push skipped:', err.message);
-  }
+  // Step 5: CRM lead is pushed server-side via Code.gs
+  setProc(5,'ok');
 
   await delay(600);
   document.getElementById('overlay').classList.remove('show');
