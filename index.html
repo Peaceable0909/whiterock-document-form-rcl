@@ -805,35 +805,42 @@ async function sendWA(params, fileCount){
 // The lead will appear under your account (userId) in the CRM.
 async function sendToCRM(params){
   const docList = files.map(f => f.docType || f.file.name).join(', ');
-  const body = new URLSearchParams({
-    // ── URL / routing params (required by SmartX) ──
-    from:                'qr',
-    userName:            CRM_USER_NAME,
-    userType:            CRM_USER_TYPE,
-    userId:              CRM_USER_ID,
-    branchId:            CRM_BRANCH_ID,
-    // ── Auto-filled by system (never changes) ──
-    lead_form:           'Web Enquiry',
-    source_of_reference: 'Peaceable Olaniyi',
-    country:             'Nigeria',
-    inquiry_for:         'Student Application',
-    // ── Filled by student ──
+
+  // SmartX CRM expects the routing params in the URL query string,
+  // and the lead data as POST body fields — matching exactly how
+  // the browser submits the native CRM form.
+  const urlParams = new URLSearchParams({
+    from:     'qr',
+    userName: CRM_USER_NAME,
+    userType: CRM_USER_TYPE,
+    userId:   CRM_USER_ID,
+    branchId: CRM_BRANCH_ID,
+    lead_form:'qrcode',
+  });
+
+  const formData = new URLSearchParams({
     name:                params.name,
     email:               params.email,
     phone:               params.phone,
-    city:                params.city   || '',
-    gender:              params.gender || '',
-    dateofbirth:         params.dob    || '',
-    age:                 params.age    || '',
-    // ── Extra context in remarks ──
-    remarks: `School: ${params.school} | Programme: ${params.program} | Docs: ${docList}`,
+    city:                params.city        || '',
+    gender:              params.gender      || '',
+    dateofbirth:         params.dob         || '',
+    age:                 params.age         || '',
+    country:             'Nigeria',
+    lead_form:           'Web Enquiry',
+    source_of_reference: 'Peaceable Olaniyi',
+    inquiry_for:         'Student Application',
+    remarks:             `School: ${params.school} | Programme: ${params.program} | Docs: ${docList}`,
   });
+
+  const fullUrl = CRM_BASE_URL + '?' + urlParams.toString();
+
   try {
-    await fetch(CRM_BASE_URL, {
+    await fetch(fullUrl, {
       method:  'POST',
       mode:    'no-cors',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body:    body.toString(),
+      body:    formData.toString(),
     });
   } catch(err){
     console.warn('CRM push failed silently:', err.message);
