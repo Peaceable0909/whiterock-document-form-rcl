@@ -79,10 +79,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .fld input::placeholder{color:#c0bab0}
 .fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7a7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px}
 
-/* DROP ZONE */
+/* DROP ZONE — FIX: removed position:absolute overlay input, use onclick trigger instead */
 .dropzone{border:2px dashed var(--border);border-radius:var(--r2);padding:32px 20px;text-align:center;cursor:pointer;position:relative;background:var(--paper);transition:all .2s}
 .dropzone:hover,.dropzone.over{border-color:var(--navy2);background:var(--navy-bg)}
-.dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .dz-ic{width:46px;height:46px;margin:0 auto 12px;background:var(--navy-bg);border-radius:50%;display:flex;align-items:center;justify-content:center}
 .dz-ic svg{width:20px;height:20px;color:var(--navy2)}
 .dropzone h3{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px}
@@ -271,7 +270,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
   </div>
 
   <div class="banner banner-ok" id="okBanner" style="display:none!important">
-    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd"/></svg>
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 00-1.414 0L8 12.586 4.707 9.293a1 1 00-1.414 1.414l4 4a1 1 001.414 0l8-8a1 1 000-1.414z" clip-rule="evenodd"/></svg>
     <span><strong>Connected!</strong> Documents will be saved to Google Drive and emailed to applications.whiterock@gmail.com</span>
   </div>
 
@@ -344,14 +343,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
           </div>
         </div>
 
-        <!-- UPLOAD -->
+        <!-- UPLOAD — FIX: dropzone uses onclick to trigger hidden file input -->
         <div class="csec">
           <div class="stitle">Upload Documents</div>
           <div class="ssub">Select one or more files — all formats accepted. Non-PDFs are converted automatically</div>
 
-          <div class="dropzone" id="dz">
-            <input type="file" id="fileInput" multiple
-              accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp,.docx,.doc,.txt,.rtf,.ppt,.pptx,.xls,.xlsx">
+          <!-- Hidden file input — triggered by dropzone click and drag-drop -->
+          <input type="file" id="fileInput" multiple
+            accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp,.docx,.doc,.txt,.rtf,.ppt,.pptx,.xls,.xlsx"
+            style="display:none"
+            onchange="onFileInputChange(this)">
+
+          <div class="dropzone" id="dz" onclick="document.getElementById('fileInput').click()">
             <div class="dz-ic">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
             </div>
@@ -424,7 +427,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
   <div class="modal">
     <div class="mhdr">
       <h2>Google Drive & Email Setup</h2>
-      <button class="mcls" onclick="closeSetup()">✕</button>
+      <button class="mcls" onclick="closeSetup()">&#x2715;</button>
     </div>
     <div class="mbody">
       <div class="msec-title">Step-by-step: Deploy your Google Apps Script</div>
@@ -435,11 +438,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
         </div>
         <div class="sg-item">
           <div class="sg-num">2</div>
-          <div class="sg-text">Click <strong>New Project</strong> → delete the default code → paste the entire contents of <code>Code.gs</code> (the file I gave you)</div>
+          <div class="sg-text">Click <strong>New Project</strong> &rarr; delete the default code &rarr; paste the entire contents of <code>Code.gs</code></div>
         </div>
         <div class="sg-item">
           <div class="sg-num">3</div>
-          <div class="sg-text">Click <strong>Deploy → New Deployment</strong> → Type: <strong>Web App</strong> → Execute as: <strong>Me</strong> → Access: <strong>Anyone</strong> → Deploy</div>
+          <div class="sg-text">Click <strong>Deploy &rarr; New Deployment</strong> &rarr; Type: <strong>Web App</strong> &rarr; Execute as: <strong>Me</strong> &rarr; Access: <strong>Anyone</strong> &rarr; Deploy</div>
         </div>
         <div class="sg-item">
           <div class="sg-num">4</div>
@@ -467,14 +470,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
   <div class="modal">
     <div class="mhdr">
       <h2>WhatsApp Notifications</h2>
-      <button class="mcls" onclick="closeWA()">✕</button>
+      <button class="mcls" onclick="closeWA()">&#x2715;</button>
     </div>
     <div class="mbody">
       <div class="mhint">
-        Get your token from <a href="https://developers.facebook.com/apps" target="_blank">developers.facebook.com</a> →
-        your App → WhatsApp → API Setup.<br><br>
+        Get your token from <a href="https://developers.facebook.com/apps" target="_blank">developers.facebook.com</a> &rarr;
+        your App &rarr; WhatsApp &rarr; API Setup.<br><br>
         Copy the <strong>Temporary Access Token</strong> (starts with <code>EAAG...</code>)
-        and your <strong>Phone Number ID</strong> (long number on the same page).
+        and your <strong>Phone Number ID</strong>.
       </div>
       <div class="mfld">
         <label>Meta Access Token</label>
@@ -520,7 +523,7 @@ function openSetup(){
   document.getElementById('cfgUrl').value = cfg.scriptUrl||'';
   const st = document.getElementById('urlStatus');
   st.innerHTML = cfg.scriptUrl
-    ? '<span class="status-pill pill-ok">✓ Connected</span>'
+    ? '<span class="status-pill pill-ok">&#x2713; Connected</span>'
     : '<span class="status-pill pill-no">Not configured</span>';
   document.getElementById('setupModal').classList.add('show');
 }
@@ -543,7 +546,7 @@ function openWA(){
   document.getElementById('waToken').value = waToken;
   document.getElementById('waPhoneId').value = waPhoneId;
   document.getElementById('waStatusChip').innerHTML = waToken
-    ? '<span class="status-pill pill-ok">✓ Active</span>'
+    ? '<span class="status-pill pill-ok">&#x2713; Active</span>'
     : '<span class="status-pill pill-no">Not set</span>';
   document.getElementById('waModal').classList.add('show');
 }
@@ -552,6 +555,13 @@ function closeWA(){ document.getElementById('waModal').classList.remove('show');
 function updateBanners(){
   document.getElementById('setupBanner').classList.remove('show');
   document.getElementById('okBanner').classList.add('show');
+}
+
+// ── FILE INPUT HANDLER ────────────────────────────────────
+// FIX: separate named function so the hidden input can call it
+function onFileInputChange(input){
+  addFiles(input.files);
+  input.value = ''; // reset so same file can be re-added
 }
 
 // ── FILE MANAGEMENT ──────────────────────────────────────
@@ -585,9 +595,9 @@ function removeFile(id){
 
 const DOC_TYPES = [
   'BSc Certificate','HND Certificate','NECO Certificate','WAEC',
-  'BSc Transcript','HND Transcript','CV','NECO Scratch Card','WAEC',
+  'BSc Transcript','HND Transcript','CV','NECO Scratch Card',
   'Passport Data Page','Affidavit','IELTS','REFRENCE','REFRENCE 1',
-  'REFRENCE 2','SOP','Affidavit','Proposal','Other'
+  'REFRENCE 2','SOP','Proposal','Other'
 ];
 
 function setDocType(id, val){
@@ -624,8 +634,8 @@ function renderFileList(){
     else if(f.type==='word'){icClass='fic-doc';icLabel='DOC';}
 
     const chip = isPDF
-      ? '<span class="fi-chip chip-pass">✓ PDF — sent as-is</span>'
-      : '<span class="fi-chip chip-conv">↻ Will convert to PDF</span>';
+      ? '<span class="fi-chip chip-pass">&#x2713; PDF — sent as-is</span>'
+      : '<span class="fi-chip chip-conv">&#x21BB; Will convert to PDF</span>';
 
     const selVal = f.docType || '';
     const selClass = selVal ? 'labelled' : 'unlabelled';
@@ -638,7 +648,7 @@ function renderFileList(){
         <div class="fic ${icClass}">${icLabel}</div>
         <div class="fi-info" style="flex:1;min-width:0">
           <div class="fi-name">${esc(f.file.name)}</div>
-          <div class="fi-meta">${fmtSize(f.file.size)} · ${f.ext.toUpperCase()}</div>
+          <div class="fi-meta">${fmtSize(f.file.size)} &middot; ${f.ext.toUpperCase()}</div>
           ${chip}
           <div class="fi-dtype">
             <select id="dtype-${f.id}" class="${selClass}" onchange="setDocType(${f.id}, this.value)">
@@ -669,16 +679,13 @@ function renderFileList(){
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function fmtSize(b){ if(b<1024)return b+' B'; if(b<1048576)return (b/1024).toFixed(1)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
 
-document.getElementById('fileInput').addEventListener('change', function(){
-  addFiles(this.files);
-  this.value='';
-});
-
+// ── DRAG AND DROP ─────────────────────────────────────────
 const dz = document.getElementById('dz');
-dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.classList.add('over'); });
-dz.addEventListener('dragleave', ()=> dz.classList.remove('over'));
+dz.addEventListener('dragover', e=>{ e.preventDefault(); e.stopPropagation(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', e=>{ e.stopPropagation(); dz.classList.remove('over'); });
 dz.addEventListener('drop', e=>{
-  e.preventDefault(); dz.classList.remove('over');
+  e.preventDefault(); e.stopPropagation();
+  dz.classList.remove('over');
   addFiles(e.dataTransfer.files);
 });
 
@@ -773,24 +780,23 @@ async function textBodyToPDF(text,jsPDF){
 function setProc(n,state){
   const li=document.getElementById('pl'+n), ind=document.getElementById('pi'+n);
   li.className=state;
-  if(state==='ok') ind.innerHTML='✓';
-  else if(state==='err') ind.innerHTML='✗';
+  if(state==='ok') ind.innerHTML='&#x2713;';
+  else if(state==='err') ind.innerHTML='&#x2717;';
   else if(state==='on') ind.innerHTML='<div class="spin"></div>';
   else ind.textContent=n;
 }
 
 // ── WHATSAPP ──────────────────────────────────────────────
+// FIX: removed the stray extra closing brace that was here in the original
 async function sendWA(params, fileCount){
   if(!waToken||!waPhoneId) throw new Error('No WA token');
-  const msg=`📄 *New Submission — Whiterock Admissions*\n\n👤 *Name:* ${params.name}\n📧 *Email:* ${params.email}\n📞 *Phone:* ${params.phone}\n🎓 *Programme:* ${params.program}\n📎 *Documents:* ${fileCount} file(s)\n⏰ ${new Date().toLocaleString('en-NG')}\n\n✅ Saved to Drive & emailed to your Gmail.`;
+  const msg=`\uD83D\uDCC4 *New Submission \u2014 Whiterock Admissions*\n\n\uD83D\uDC64 *Name:* ${params.name}\n\uD83D\uDCE7 *Email:* ${params.email}\n\uD83D\uDCDE *Phone:* ${params.phone}\n\uD83C\uDF93 *Programme:* ${params.program}\n\uD83D\uDCCE *Documents:* ${fileCount} file(s)\n\u23F0 ${new Date().toLocaleString('en-NG')}\n\n\u2705 Saved to Drive & emailed to your Gmail.`;
   const res=await fetch(`https://graph.facebook.com/v19.0/${waPhoneId}/messages`,{
     method:'POST',
     headers:{'Authorization':'Bearer '+waToken,'Content-Type':'application/json'},
     body:JSON.stringify({messaging_product:'whatsapp',to:MY_WA,type:'text',text:{body:msg}})
   });
   if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'WA error');}
-}
-
 }
 
 // ── SUBMIT ────────────────────────────────────────────────
@@ -936,7 +942,7 @@ function showToast(msg,type=''){
   setTimeout(()=>{t.className='toast';},3500);
 }
 
-// ── SCHOOL → PROGRAMME DATA ───────────────────────────────
+// ── SCHOOL PROGRAMMES ─────────────────────────────────────
 const PROGRAMMES = {
   rcl: [
     { group: 'Business — AY 2025/2026', items: [
