@@ -243,16 +243,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
           <p>Document Submission Portal — RCL</p>
         </div>
       </div>
-      <div class="hdr-actions" style="display:none">
-        <button class="hbtn" onclick="openSetup()">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>
-          Setup
-        </button>
-        <button class="hbtn" onclick="openWA()">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.533 5.845L.057 23.197a.75.75 0 00.923.923l5.352-1.476A11.942 11.942 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.951 9.951 0 01-5.39-1.48l-.387-.231-4.007 1.104 1.104-4.007-.231-.387A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-          WhatsApp
-        </button>
-      </div>
+div>
     </div>
     <div class="prog-strip" id="progStrip">
       <div class="pseg" id="ps1"></div><div class="pseg" id="ps2"></div>
@@ -312,6 +303,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
                 <option value="ysj">York St John University</option>
                 <option value="bpp">BPP University</option>
               </select>
+            </div>
+            <div class="fld">
+              <label>Country <sup>*</sup></label>
+              <input type="text" id="fCountry" placeholder="e.g. Nigeria" required autocomplete="country-name">
+            </div>
+            <div class="fld full" id="counselorWrap">
+              <label>Counselor Handling Application <sup>*</sup></label>
+              <select id="fCounselor" required onchange="onCounselorChange()">
+                <option value="" disabled selected>Select a counselor...</option>
+                <option>Mrs Lydia</option><option>Michael</option><option>Zainab</option>
+                <option>Peaceable</option><option>Trust</option><option>Mr Anya</option>
+                <option>Jude Scott</option><option>Praise</option><option>Mrs Gladys</option>
+                <option>Feranmi</option><option>Mr Adegoke</option><option>Robert</option>
+                <option>Mr Abraham</option><option>Cherish</option><option>Mrs Oluwo</option>
+                <option>Mr Paul</option><option>Mr Courage</option>
+                <option>I don't have a counselor yet</option>
+                <option value="__custom__">My counselor's name is not here</option>
+              </select>
+              <input type="text" id="fCounselorOther" placeholder="Enter your counselor's name" style="display:none" autocomplete="name">
             </div>
             <div class="fld full" id="programWrap" style="display:none">
               <label>Programme Intending to Apply For <sup>*</sup></label>
@@ -413,9 +423,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
     <ul class="proc-list" id="procList">
       <li id="pl1"><div class="pind" id="pi1">1</div> Converting documents to PDF</li>
       <li id="pl2"><div class="pind" id="pi2">2</div> Uploading to Google Drive</li>
-      <li id="pl3"><div class="pind" id="pi3">3</div> Sending email notification</li>
-      <li id="pl4"><div class="pind" id="pi4">4</div> Sending WhatsApp alert</li>
-      <li id="pl5"><div class="pind" id="pi5">5</div> Registering lead in CRM</li>
+      <li id="pl3"><div class="pind" id="pi3">3</div> Updating Google Sheet and sending confirmation</li>
+      
     </ul>
   </div>
 </div>
@@ -465,43 +474,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
   </div>
 </div>
 
-<!-- WHATSAPP MODAL -->
-<div class="modal-bg" id="waModal">
-  <div class="modal">
-    <div class="mhdr">
-      <h2>WhatsApp Notifications</h2>
-      <button class="mcls" onclick="closeWA()">&#x2715;</button>
-    </div>
-    <div class="mbody">
-      <div class="mhint">
-        Get your token from <a href="https://developers.facebook.com/apps" target="_blank">developers.facebook.com</a> &rarr;
-        your App &rarr; WhatsApp &rarr; API Setup.<br><br>
-        Copy the <strong>Temporary Access Token</strong> (starts with <code>EAAG...</code>)
-        and your <strong>Phone Number ID</strong>.
-      </div>
-      <div class="mfld">
-        <label>Meta Access Token</label>
-        <input type="text" id="waToken" placeholder="EAAGxxxxxxxxxxxxx">
-      </div>
-      <div class="mfld">
-        <label>Phone Number ID</label>
-        <input type="text" id="waPhoneId" placeholder="e.g. 123456789012345">
-      </div>
-      <div style="font-size:13px;color:var(--ink3);margin-top:4px">
-        Alerts will be sent to: <strong>+234 907 456 1545</strong>
-        &nbsp;<span id="waStatusChip"></span>
-      </div>
-    </div>
-    <div class="mfoot">
-      <button class="mcancel" onclick="closeWA()">Cancel</button>
-      <button class="msave" onclick="saveWA()">Save WhatsApp</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // ── BAKED-IN ────────────────────────────────────────────
-const MY_WA = '2349074561545';
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAknHtoZDSZISm_T_fAkJS0D1thAByxgpgX3FgCk3ZbLr3nNHEYBDR1GMlRKcynsNWaQ/exec';
 
 // ── CONFIG (localStorage) ────────────────────────────────
@@ -528,34 +502,6 @@ function openSetup(){
   document.getElementById('setupModal').classList.add('show');
 }
 function closeSetup(){ document.getElementById('setupModal').classList.remove('show'); }
-
-// WhatsApp config
-let waToken='', waPhoneId='';
-function loadWA(){
-  try{ const s=JSON.parse(localStorage.getItem('wr_wa')||'{}'); waToken=s.token||''; waPhoneId=s.pid||''; }catch(e){}
-}
-function saveWA(){
-  waToken = document.getElementById('waToken').value.trim();
-  waPhoneId = document.getElementById('waPhoneId').value.trim();
-  localStorage.setItem('wr_wa', JSON.stringify({token:waToken,pid:waPhoneId}));
-  closeWA(); updateBanners();
-  showToast('WhatsApp configured!','ok');
-}
-function openWA(){
-  loadWA();
-  document.getElementById('waToken').value = waToken;
-  document.getElementById('waPhoneId').value = waPhoneId;
-  document.getElementById('waStatusChip').innerHTML = waToken
-    ? '<span class="status-pill pill-ok">&#x2713; Active</span>'
-    : '<span class="status-pill pill-no">Not set</span>';
-  document.getElementById('waModal').classList.add('show');
-}
-function closeWA(){ document.getElementById('waModal').classList.remove('show'); }
-
-function updateBanners(){
-  document.getElementById('setupBanner').classList.remove('show');
-  document.getElementById('okBanner').classList.add('show');
-}
 
 // ── FILE INPUT HANDLER ────────────────────────────────────
 // FIX: separate named function so the hidden input can call it
@@ -690,21 +636,25 @@ dz.addEventListener('drop', e=>{
 });
 
 // ── PROGRESS BAR ─────────────────────────────────────────
-['fName','fEmail','fPhone'].forEach(id=>{
+['fName','fEmail','fPhone','fCountry'].forEach(id=>{
   document.getElementById(id).addEventListener('input', updateProgress);
 });
 function updateProgress(){
-  const filled=['fName','fEmail','fPhone','fSchool','fProgram'].filter(id=>{
+  const counselor = document.getElementById('fCounselor');
+  const counselorReady = counselor && counselor.value === '__custom__'
+    ? !!document.getElementById('fCounselorOther').value.trim()
+    : !!(counselor && counselor.value);
+  const filled=['fName','fEmail','fPhone','fCountry','fSchool','fProgram'].filter(id=>{
     const el=document.getElementById(id); return el&&el.value.trim();
-  }).length;
+  }).length + (counselorReady ? 1 : 0);
   const hasFiles=files.length>0;
   const allLabelled=files.length>0 && files.every(f=>f.docType);
-  const pct=(filled/5)*50+(hasFiles?25:0)+(allLabelled?25:0);
+  const pct=(filled/7)*50+(hasFiles?25:0)+(allLabelled?25:0);
   const lit=Math.round((pct/100)*5);
   for(let i=1;i<=5;i++) document.getElementById('ps'+i).classList.toggle('lit',i<=lit);
-  document.getElementById('trA').className='tstep '+(filled===5?'ok':filled>0?'on':'');
-  document.getElementById('trB').className='tstep '+(allLabelled?'ok':hasFiles?'on':filled===5?'on':'');
-  document.getElementById('trC').className='tstep '+(filled===5&&allLabelled?'on':'');
+  document.getElementById('trA').className='tstep '+(filled===7?'ok':filled>0?'on':'');
+  document.getElementById('trB').className='tstep '+(allLabelled?'ok':hasFiles?'on':filled===7?'on':'');
+  document.getElementById('trC').className='tstep '+(filled===7&&allLabelled?'on':'');
 }
 
 // ── PDF CONVERSION ────────────────────────────────────────
@@ -786,19 +736,6 @@ function setProc(n,state){
   else ind.textContent=n;
 }
 
-// ── WHATSAPP ──────────────────────────────────────────────
-// FIX: removed the stray extra closing brace that was here in the original
-async function sendWA(params, fileCount){
-  if(!waToken||!waPhoneId) throw new Error('No WA token');
-  const msg=`\uD83D\uDCC4 *New Submission \u2014 Whiterock Admissions*\n\n\uD83D\uDC64 *Name:* ${params.name}\n\uD83D\uDCE7 *Email:* ${params.email}\n\uD83D\uDCDE *Phone:* ${params.phone}\n\uD83C\uDF93 *Programme:* ${params.program}\n\uD83D\uDCCE *Documents:* ${fileCount} file(s)\n\u23F0 ${new Date().toLocaleString('en-NG')}\n\n\u2705 Saved to Drive & emailed to your Gmail.`;
-  const res=await fetch(`https://graph.facebook.com/v19.0/${waPhoneId}/messages`,{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+waToken,'Content-Type':'application/json'},
-    body:JSON.stringify({messaging_product:'whatsapp',to:MY_WA,type:'text',text:{body:msg}})
-  });
-  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'WA error');}
-}
-
 // ── SUBMIT ────────────────────────────────────────────────
 async function handleSubmit(e){
   e.preventDefault();
@@ -817,6 +754,11 @@ async function handleSubmit(e){
   const schoolEl=document.getElementById('fSchool');
   const schoolName=schoolEl.options[schoolEl.selectedIndex]?.text||'';
   const dobVal = document.getElementById('fDob').value;
+  const counselorSelect = document.getElementById('fCounselor');
+  const counselor = counselorSelect.value === '__custom__'
+    ? document.getElementById('fCounselorOther').value.trim()
+    : counselorSelect.value;
+  if(!counselor){ showToast('Please select or enter a counselor.','err'); return; }
   const params={
     name:   document.getElementById('fName').value.trim(),
     email:  document.getElementById('fEmail').value.trim(),
@@ -827,11 +769,15 @@ async function handleSubmit(e){
     gender: document.getElementById('fGender').value,
     dob:    dobVal,
     age:    document.getElementById('fAge').value,
+    counselor: counselor,
+    country: document.getElementById('fCountry').value.trim(),
+    applicationStatus: '',
+    notes: ''
   };
 
   document.getElementById('overlay').classList.add('show');
   document.getElementById('sbtn').disabled=true;
-  setProc(1,''); setProc(2,''); setProc(3,''); setProc(4,''); setProc(5,'');
+  setProc(1,''); setProc(2,''); setProc(3,'');
 
   // Step 1: Convert all files to PDF
   let converted=[];
@@ -858,7 +804,7 @@ async function handleSubmit(e){
   let folderUrl='';
   try{
     await delay(200);
-    const payload={ name:params.name, email:params.email, phone:params.phone, city:params.city, gender:params.gender, dob:params.dob, age:params.age, school:params.school, program:params.program, files:converted };
+    const payload={ name:params.name, email:params.email, phone:params.phone, country:params.country, city:params.city, gender:params.gender, dob:params.dob, age:params.age, counselor:params.counselor, applicationStatus:params.applicationStatus, notes:params.notes, school:params.school, program:params.program, files:converted };
     const fd=new FormData();
     fd.append('data', JSON.stringify(payload));
     let res;
@@ -880,18 +826,7 @@ async function handleSubmit(e){
     return;
   }
 
-  // Step 4: WhatsApp (non-fatal)
-  setProc(4,'on');
-  try{
-    await sendWA(params, converted.length);
-    setProc(4,'ok');
-  }catch(err){
-    setProc(4,'err');
-    console.warn('WhatsApp skipped:', err.message);
-  }
-
-  // Step 5: CRM lead is pushed server-side via Code.gs
-  setProc(5,'ok');
+  // Google Sheets logging is completed by Apps Script in Step 2.
 
   await delay(600);
   document.getElementById('overlay').classList.remove('show');
@@ -907,7 +842,9 @@ function showSuccess(params, count, folderUrl){
     <div><span class="sl">Name</span><span class="sv">${params.name}</span></div>
     <div><span class="sl">Email</span><span class="sv">${params.email}</span></div>
     <div><span class="sl">School</span><span class="sv">${params.school}</span></div>
+    <div><span class="sl">Country</span><span class="sv">${params.country}</span></div>
     <div><span class="sl">Programme</span><span class="sv">${params.program}</span></div>
+    <div><span class="sl">Counselor</span><span class="sv">${params.counselor}</span></div>
     <div><span class="sl">Documents</span><span class="sv">${count} file(s) submitted</span></div>
     <div><span class="sl">Sent to</span><span class="sv">applications.whiterock@gmail.com</span></div>`;
   if(folderUrl){
@@ -920,10 +857,14 @@ function showSuccess(params, count, folderUrl){
 function resetForm(){
   document.getElementById('theForm').reset();
   document.getElementById('programWrap').style.display='none';
+  document.getElementById('fCountry').value='';
   document.getElementById('fCity').value='';
   document.getElementById('fGender').value='';
   document.getElementById('fDob').value='';
   document.getElementById('fAge').value='';
+  document.getElementById('fCounselor').value='';
+  document.getElementById('fCounselorOther').value='';
+  document.getElementById('fCounselorOther').style.display='none';
   files=[]; renderFileList(); updateProgress();
   document.getElementById('successView').classList.remove('show');
   document.getElementById('driveFolderLink').style.display='none';
@@ -941,6 +882,18 @@ function showToast(msg,type=''){
   t.textContent=msg; t.className='toast show'+(type?' '+type:'');
   setTimeout(()=>{t.className='toast';},3500);
 }
+
+function onCounselorChange(){
+  const select = document.getElementById('fCounselor');
+  const other = document.getElementById('fCounselorOther');
+  const custom = select.value === '__custom__';
+  other.style.display = custom ? '' : 'none';
+  other.required = custom;
+  if(!custom) other.value = '';
+  updateProgress();
+}
+
+document.getElementById('fCounselorOther').addEventListener('input', updateProgress);
 
 // ── SCHOOL PROGRAMMES ─────────────────────────────────────
 const PROGRAMMES = {
