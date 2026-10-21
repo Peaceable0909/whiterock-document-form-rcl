@@ -1389,6 +1389,22 @@
                     autocomplete="name"
                   />
                 </div>
+                <div class="fld full" id="sourceWrap">
+                  <label>How did you hear about WhiteRock?</label>
+                  <select id="fSource">
+                    <option value="" selected>Select one (optional)...</option>
+                    <option>Instagram</option>
+                    <option>Facebook</option>
+                    <option>TikTok</option>
+                    <option>WhatsApp</option>
+                    <option>Website</option>
+                    <option>Flyer or poster</option>
+                    <option>Event or fair</option>
+                    <option>Referral</option>
+                    <option>Walk-in</option>
+                    <option>Other</option>
+                  </select>
+                </div>
                 <div class="fld full" id="programWrap" style="display: none">
                   <label>Programme Intending to Apply For <sup>*</sup></label>
                   <select id="fProgram">
@@ -2092,7 +2108,10 @@
           counselor: counselor,
           country: document.getElementById("fCountry").value.trim(),
           applicationStatus: "",
-          notes: "",
+          // Where the student heard about WhiteRock. It travels in the notes as "Lead source: Instagram" so the
+          // existing sheet and the portal pick it up without any change to the Apps Script.
+          notes: leadSourceNote(),
+          source: document.getElementById("fSource").value,
         };
 
         document.getElementById("overlay").classList.add("show");
@@ -2141,6 +2160,7 @@
             counselor: params.counselor,
             applicationStatus: params.applicationStatus,
             notes: params.notes,
+            source: params.source,
             school: params.school,
             program: params.program,
             files: converted,
@@ -2177,6 +2197,34 @@
         showSuccess(params, converted.length, folderUrl);
       }
 
+      // ── LEAD SOURCE ─────────────────────────────────────────
+      function leadSourceNote() {
+        const v = document.getElementById("fSource").value;
+        return v ? "Lead source: " + v : "";
+      }
+      // A link like ...?src=instagram (a flyer QR code, a bio link) pre-selects the answer.
+      function prefillLeadSource() {
+        const sel = document.getElementById("fSource");
+        const raw = new URLSearchParams(location.search).get("src");
+        if (!sel || !raw) return;
+        const t = raw.toLowerCase().replace(/[^a-z]+/g, "");
+        const rules = [
+          [/insta|^ig$/, "Instagram"],
+          [/face|^fb$/, "Facebook"],
+          [/tik/, "TikTok"],
+          [/whats|^wa$/, "WhatsApp"],
+          [/flyer|poster|print|^qr|brochure|billboard/, "Flyer or poster"],
+          [/event|fair|expo|seminar|webinar/, "Event or fair"],
+          [/refer|friend|family|alumn|relative/, "Referral"],
+          [/walk/, "Walk-in"],
+          [/web|site|google|search|online|link/, "Website"],
+        ];
+        const hit = rules.find(([re]) => re.test(t));
+        const want = hit ? hit[1] : "Other";
+        for (const o of sel.options) if (o.text === want) sel.value = o.text;
+      }
+      document.addEventListener("DOMContentLoaded", prefillLeadSource);
+
       function delay(ms) {
         return new Promise((r) => setTimeout(r, ms));
       }
@@ -2204,6 +2252,7 @@
 
       function resetForm() {
         document.getElementById("theForm").reset();
+        prefillLeadSource();
         document.getElementById("programWrap").style.display = "none";
         document.getElementById("fCountry").value = "";
         document.getElementById("fCity").value = "";
