@@ -1,6 +1,6 @@
 # WhiteRock document form
 
-The page students use to send their application documents to WhiteRock Educational Services. One static file (`index.html`), published by GitHub Pages from `main` (`.github/workflows/static.yml`).
+The page students use to send their application documents to WhiteRock Educational Services. One static file (`index.html`). Every push to `main` publishes it in three places: GitHub Pages (`.github/workflows/static.yml`), Netlify (site `applicationswr`, https://applicationswr.netlify.app) and Vercel (project `whiterock-document-form-rcl`). Check which address is printed on flyers and QR codes before changing the page. Pull requests get a preview on each host.
 
 ## What is here
 
