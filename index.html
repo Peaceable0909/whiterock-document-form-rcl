@@ -1843,6 +1843,36 @@
         }
       }
 
+      /* ── Privacy notice and footer ── */
+      .send .consent {
+        margin-top: 10px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: var(--muted);
+        max-width: 52ch;
+      }
+      .send .consent a,
+      .foot a {
+        color: var(--blue);
+        font-weight: 600;
+        text-underline-offset: 3px;
+      }
+      .send .consent a:hover,
+      .foot a:hover {
+        color: var(--ink);
+      }
+      .foot {
+        position: relative;
+        z-index: 1;
+        margin: 34px auto 0;
+        max-width: 740px;
+        padding-top: 22px;
+        border-top: 1px solid var(--line);
+        text-align: center;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -2105,6 +2135,11 @@
                       Check that everything looks right, then send. WhiteRock
                       receives it all in one go.
                     </p>
+                    <p class="consent">
+                      By sending, you agree that WhiteRock may use your details
+                      and documents as described in our
+                      <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>.
+                    </p>
                   </div>
                   <button type="submit" class="sbtn" id="sbtn">
                     <span>Send my documents</span>
@@ -2149,6 +2184,10 @@
             </section>
           </div>
         </div>
+        <footer class="foot">
+          © <span id="yr">2026</span> WhiteRock Educational Services ·
+          <a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a>
+        </footer>
       </main>
     </div>
 
@@ -3308,6 +3347,8 @@
         b.disabled = false;
         b.classList.remove("launch");
       }
+
+      $("yr").textContent = new Date().getFullYear();
 
       // ── INIT ──────────────────────────────────────────────────
       renderFileList();

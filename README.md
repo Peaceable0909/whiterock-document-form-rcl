@@ -6,6 +6,7 @@ The page students use to send their application documents to WhiteRock Education
 
 - `index.html`: the page (markup, styles and script in one file).
 - `assets/`: the WhiteRock logo, icons and the three fonts (Bricolage Grotesque, Figtree, IBM Plex Mono). Fonts are served from here, not from Google.
+- `privacy.html`: the privacy policy, linked from the footer and beside the Send button. It describes what the form and the portal really do (what is collected, who sees it, which services are used). If the form starts collecting something new, or the systems behind it change, update the policy in the same change.
 - `whiterock-admissions-form (1).html`: an older copy of the form from before the rebrand. Nothing links to it.
 
 ## What must not change without changing the Apps Script and the portal too
