@@ -10,7 +10,7 @@ The page students use to send their application documents to WhiteRock Education
 
 ## What must not change without changing the Apps Script and the portal too
 
-- **Where it posts.** One `POST` to `SCRIPT_URL` (the Apps Script web app) with a `FormData` field `data` holding JSON. It is sent once and never repeated: if the answer cannot be read the page still carries on, because the script has already run.
+- **Where it posts.** One `POST` to `SCRIPT_URL` (the Apps Script web app) with a `FormData` field `data` holding JSON. It is sent once and never repeated: the script has already made the Drive folder, the sheet row and the email by the time it answers, so a second request would double them. The page does not read the answer.
 - **The JSON keys, in this order:** `name, email, phone, country, city, gender, dob, age, counselor, applicationStatus, notes, source, school, program, files`. `files` is a list of `{ name, base64 }`, every file as a PDF, named `<Student name> - <document type>.pdf`.
 - **The document types** (`DOC_TYPES`) end up in file names, and the portal matches on them. The spellings (including `REFRENCE`) are part of that contract.
 - **School names** are the visible text of the school options, for example `Regent College London (RCL)`.
@@ -21,4 +21,6 @@ The page students use to send their application documents to WhiteRock Education
 
 - The helper libraries (jsPDF, mammoth, pdf.js, from cdnjs) load only when a file needs them, so the page itself shows straight away. A download that has not finished after 30 seconds ends with a clear message instead of an endless spinner.
 - PDFs are sent as they are. Images, `.docx` and `.txt` are turned into PDFs in the browser. Word `.doc`, RTF, PowerPoint and Excel files are read as plain text, which does not give a readable PDF, so the page warns the student to send a PDF instead.
-- Progress (the side steps and the thin line across the top) follows the same seven required answers plus whether every file has a type.
+- Progress (the side steps, the ring in the seal and the thin line across the top) follows the same seven required answers plus whether every file has a type.
+- The page says only that WhiteRock has received the documents. It does not mention Google Drive or the email address, on purpose.
+- Everything that moves uses `transform` and `opacity`, and `prefers-reduced-motion` switches all of it off (the confetti, the bursts and the count-ups included). Keep it that way when adding more.
